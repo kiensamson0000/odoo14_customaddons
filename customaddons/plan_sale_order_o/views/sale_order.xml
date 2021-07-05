@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- create view button tren header, %()d: replace but ,attrs: với insivible ẩn button khi plan != False-->
+<odoo>
+    <data>
+        <record id="quotation_form_view" model="ir.ui.view">
+            <field name="name">quotation.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(plan_sale_order_o.create_plan_wizard)d" id="action_create_sale_plan"
+                        string="Create Sale Plan" class="btn-secondary" type="action"
+                        attrs="{'invisible': [('plan', '!=', False)]}"/>
+                </xpath>
+
+                <!--create view field plan trong quotation, chỉ đọc-->
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="plan" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Filter for menu "Valid Sale Plan" -->
+        <record id="filter_valid_sale_plan_action" model="ir.actions.act_window">
+            <field name="name">Valid Sale Plan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.plan</field>
+            <field name="domain">[('check_sale_plan', '=', True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="valid_sale_plan" name="Valid Sale Plan" parent="sale.sale_menu_root"
+                  action="filter_valid_sale_plan_action" sequence="8"/>
+    </data>
+</odoo>
+
+

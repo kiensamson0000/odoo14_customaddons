@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+<!--    View Inherit
+        View con này đặt ID và name mới, attribute model trỏ tới đúng model my.pet -->
+
+        <record id="mypet_plus_my_pet_form_view_1" model="ir.ui.view">
+            <field name="name">mypet.plus.my.pet.form.view</field>
+            <field name="model">my.pet</field>
+            <field name="inherit_id" ref="mypets.my_pet_form_view"/>        <!-- reference đến ID của view cha sẽ thừa kế-->
+            <field name="arch" type="xml">
+<!--        position: inside, replace, after, before, attributes, move
+                "before" hoặc "after": chèn node mới liền trước hay liền sau node tham chiếu đến. -->
+                <xpath expr="//group[@name='images']/group[2]" position="inside">     <!-- chèn 1 node mới vào vị trí cuối cùng-->
+                    <field name="toy"/>
+                </xpath>
+<!--            "replace": Giả sử field product không cần, dùng thừa kế để xóa field  khỏi view mà không phải chỉnh sửa trực tiếp file XML trong module gốc mypet-->
+                <xpath expr="//field[@name='product_ids']" position="replace">
+                    <!-- empty -->
+                </xpath>
+<!--            "attributes": ẩn field-->
+                <xpath expr="//field[@name='description']" position="attributes">
+                    <attribute name="invisible">1</attribute> <!-- hide description field -->
+                </xpath>
+                <xpath expr="//label[@for='description']" position="attributes">
+                    <attribute name="invisible">1</attribute> <!-- hide label of description field, set = 1-->
+                </xpath>
+<!--            "attributes": change field string "nickname"-> "Pet Nick Name"-->
+                <xpath expr="//field[@name='nickname']" position="attributes">
+                    <attribute name="string">Pet Nick Name</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

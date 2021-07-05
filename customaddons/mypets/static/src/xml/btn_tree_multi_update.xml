@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Thanh điều khiển chứa các nút chức năng trên list view được code ở frontend mô tả bằng Qweb: https://github.com/odoo/odoo/blob/13.0/addons/web/static/src/xml/base.xml#L265
+    Cần thừa kế Qweb frontend để bổ sung thêm một button muốn tạo-->
+
+<templates id="template" xml:space="preserve">
+    <t t-extend="ListView.buttons">
+        <t t-jquery="div.o_list_buttons" t-operation="append">
+            <!--t-if giúp button mới thêm vào Odoo chỉ render ở view của model my.pet.-->
+           <button t-if="widget.modelName=='my.pet'" type="button" class="btn btn-primary o_list_button_multi_update" accesskey="u">
+                Multi Update
+            </button>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="code_customer_form_view" model="ir.ui.view">
+            <field name="name">code.customer.form.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="customer_discount_code" groups="customize_coupons.group_advanced_sale"/>
+                    <field name='valide_code' invisible="1" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="code_customer_tree_view" model="ir.ui.view">
+            <field name="name">code.customer.tree.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="customer_discount_code" groups="customize_coupons.group_advanced_sale"/>
+                    <field name="valide_code" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="filter_valid_customer_code_action" model="ir.actions.act_window">
+            <field name="name">Valid Customers Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('valide_code', '=', True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="valid_customer_code"
+                  name="Customers Valid Code"
+                  parent="sale.sale_menu_root"
+                  action="filter_valid_customer_code_action"
+                  sequence="6"/>
+    </data>
+</odoo>

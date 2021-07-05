@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- View Form Create Plan Wizard-->
+
+<odoo>
+    <record id="create_plan_form" model="ir.ui.view">
+        <field name="name">create.plan.form</field>
+        <field name="model">create.plan</field>
+        <field name="arch" type="xml">
+            <form string="Create Appointment">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="detail"/>
+                        <field name="partner_lines"/>
+                    </group>
+                </sheet>
+                <p><b>Apply create on the selected record(s) ?</b></p>
+                <footer>
+                    <button name="create_plan" string="Create Sale Plan" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_plan_wizard" model="ir.actions.act_window">
+        <field name="name">Create Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.plan</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_plan_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

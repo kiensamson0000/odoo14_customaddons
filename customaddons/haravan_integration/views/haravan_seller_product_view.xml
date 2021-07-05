@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Base structure of haravan.seller.product, common with haravan.seller.product.variants-->
+        <record id="haravan_seller_product_view_form" model="ir.ui.view">
+            <field name="name">haravan.seller.product.view.form</field>
+            <field name="model">haravan.seller.product</field>
+            <field name="arch" type="xml">
+                <form string="Product">
+                    <header>
+<!--                        <button name="get_products_haravan" string="Get Products" class="oe_highlight" type="object"/>-->
+                        <button name="create_products_haravan" string="Create/Update Products" class="oe_highlight" type="object"/>
+                        <button name="create_products_haravan" string="Update Products" class="oe_highlight" type="object"/>
+                        <button name="delete_products_haravan" string="Delete Products" class="oe_highlight" type="object"/>
+                    </header>
+                    <sheet>
+                        <field name="image_url" widget="image_url" class="oe_avatar"/>
+<!--                        <field name="image" widget="image" class="oe_avatar"/>-->
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Product Name" required="True"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="General Information" name="general_information">
+                                <group>
+                                    <group name="group_general">
+                                        <field name="seller_product_id" readonly="1"/>
+                                        <field name="product_type"/>
+                                        <field name="barcode"/>
+                                        <field name="tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="price"/>
+                                        <field name="vendor"/>
+                                        <field name="image"/>
+                                        <field name="created_at" readonly="1"/>
+                                        <field name="updated_at" readonly="1"/>
+                                    </group>
+                                </group>
+                                <group string="Internal Notes">
+                                    <field name="description" nolabel="1" placeholder="Description about product"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    <record id="haravan_seller_product_view_action" model="ir.actions.act_window">
+        <field name="name">Seller Product</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">haravan.seller.product</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There is no examples click create to add new Seller Product.
+            </p>
+        </field>
+    </record>
+
+    <!-- This Menu Item must have a parent and an action -->
+    <menuitem id="haravan_integration_root" name="Haravan Integration"
+              web_icon="haravan_integration,static/description/icon.png"/>
+
+    <menuitem id="haravan_seller_product_menu" name="Product"
+              parent="haravan_integration_root" sequence="3"/>
+
+    <menuitem id="haravan_seller_product" name="Product"
+              parent="haravan_seller_product_menu" action="haravan_seller_product_view_action"/>
+
+    <menuitem id="connect_shop_wizard" name="Connect Haravan Integration"
+              parent="haravan_integration_root"
+              action="connect_shop_wizard_act_window" sequence="6"/>
+    </data>
+</odoo>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="haravan_seller_view_form" model="ir.ui.view">
+            <field name="name">haravan.seller.view.form</field>
+            <field name="model">haravan.seller</field>
+            <field name="arch" type="xml">
+                <form string="Haravan Seller" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="client_id"/>
+                            <field name="client_secret"/>
+                            <field name="grant_type"/>
+                            <field name="redirect_uri"/>
+                            <field name="token_connect"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="haravan_seller_view_tree" model="ir.ui.view">
+            <field name="name">haravan.seller.view.tree</field>
+            <field name="model">haravan.seller</field>
+            <field name="arch" type="xml">
+                <tree string="haravan_seller_tree" create="false" delete="false" sample="1">
+                    <field name="code"/>
+                    <field name="client_id"/>
+                    <field name="client_secret"/>
+                    <field name="grant_type"/>
+                    <field name="redirect_uri"/>
+                    <field name="token_connect"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="haravan_seller_action" model="ir.actions.act_window">
+            <field name="name">Haravan Seller</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">haravan.seller</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Connect to your shop with parameters
+                </p>
+            </field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="haravan_seller_menu" name="Seller"
+                  parent="haravan_integration_root" action="haravan_seller_action"
+                  sequence="5"/>
+    </data>
+</odoo>

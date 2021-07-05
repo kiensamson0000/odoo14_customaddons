@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--&lt;!&ndash; tree view&ndash;&gt;-->
+<!--    <record id="appointment_tree_view" model="ir.ui.view">-->
+<!--        <field name="name">hospital.appointment.tree.view</field>-->
+<!--        <field name="model">hospital.appointment</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree>-->
+<!--                <field name="name"/>-->
+<!--                <field name="pateint_id"/>-->
+<!--                <field name="note"/>-->
+<!--                <field name="state"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--&lt;!&ndash;  Form view  &ndash;&gt;-->
+<!--    <record id="appointment_form_view" model="ir.ui.view">-->
+<!--        <field name="name">hospital.appointment.form.view</field>-->
+<!--        <field name="model">hospital.appointment</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <form>-->
+<!--                <header>-->
+<!--                    <button id="button_confirm" name="action_confirm" string="Confirm"-->
+<!--                            states="draft" class="btn-primary"-->
+<!--                            confirm="Are you sure that you need to confirm?" type="object"/>-->
+<!--                    <button id="button_done" name="action_done" string="Done"-->
+<!--                            states="confirm" class="btn-primary" type="object"/>-->
+<!--                    <button id="button_draft" name="action_draft" string="Draft"-->
+<!--                            states="cancel" class="btn-primary" type="object"/>-->
+<!--                    <button id="button_cancel" name="action_cancel" string="Cancel"-->
+<!--                            states="draft,confirm,done"-->
+<!--                            confirm="Are you sure that you need to cancel?" type="object"/>-->
+
+<!--                    <field name="state" widget="statusbar" statusbar_visible="draft,done,confirm"/>-->
+<!--                            &lt;!&ndash; options="{'clickable': '1'}" cho phép chọn các state-->
+<!--                                 statusbar_visible: hiện state-->
+<!--                                 states: cho phép active button khi ở values của states, ví dụ: khi ở states confirm -> click button "done"-->
+<!--                              &ndash;&gt;-->
+<!--                </header>-->
+<!--                <sheet>-->
+<!--                    <div class="oe_title">-->
+<!--                        <h1>-->
+<!--                            <field name="reference" readonly="1"/>-->
+<!--                        </h1>-->
+<!--                    </div>-->
+<!--                    <group>-->
+<!--                        <group>-->
+<!--                            <field name="name"/>-->
+<!--                            <field name="age"/>-->
+<!--                            <field name="responsible_id"/>-->
+<!--                        </group>-->
+<!--                        <group>-->
+<!--&lt;!&ndash;                            <field name="gender" invisible="context.get('hide_gender')"/>&ndash;&gt;-->
+<!--                            <field name="gender"/>-->
+<!--                            <field name="note"/>-->
+<!--                        </group>-->
+<!--                    </group>-->
+<!--                </sheet>-->
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids"/>-->
+<!--                    <field name="activity_ids"/>-->
+<!--                    <field name="message_ids"/>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--    <record id="appointment_search_view" model="ir.ui.view">-->
+<!--       <field name="name">appointment.search.view</field>-->
+<!--       <field name="model">hospital.appointment</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search string="appointments">-->
+<!--                <field name="name"/>-->
+<!--                <field name="note"/>-->
+<!--                <separator/>-->
+<!--                    &lt;!&ndash; create search &ndash;&gt;-->
+<!--                    <filter name="male" string="Male" domain="[('gender', '=', 'male')]"/>-->
+<!--                    <filter name="female" string="Female" domain="[('gender', '=', 'female')]"/>-->
+<!--                    <filter name="other" string="Other" domain="[('gender', '=', 'other')]"/>-->
+<!--                    <group expand="2" string="Group By">       &lt;!&ndash; create group by &ndash;&gt;-->
+<!--                        <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>-->
+<!--                        <filter string="appointment Name" name="appointment_name" context="{'group_by': 'name'}"/>-->
+<!--                        <filter string="Responsible" name="responsible_id" context="{'group_by': 'responsible_id'}"/>-->
+<!--                    </group>-->
+<!--                <separator/>-->
+<!--            </search>-->
+<!--       </field>-->
+<!--    </record>-->
+
+<!--    &lt;!&ndash; Kanban View &ndash;&gt;-->
+<!--    <record id="appointment_kanban_view" model="ir.ui.view">-->
+<!--        <field name="name">appointment.kanban.view</field>-->
+<!--        <field name="model">hospital.appointment</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <kanban>-->
+<!--                <field name="id"/>-->
+<!--                <field name="name"/>-->
+<!--                <field name="gender"/>-->
+<!--                <field name="age"/>-->
+<!--                <field name="note"/>-->
+<!--                <templates>-->
+<!--                    <t t-name="kanban-box">-->
+<!--                        <div t-attf-class="oe_kanban_global_click">-->
+<!--                            <div class="oe_kanban_details">-->
+<!--                                <ul>-->
+<!--                                    <li>Name: <field name="name"/></li>-->
+<!--                                    <li>Gender: <field name="gender"/></li>-->
+<!--                                    <li>Age: <field name="age"/></li>-->
+<!--                                    <li>Note: <field name="note"/></li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </t>-->
+<!--                </templates>-->
+<!--            </kanban>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--    <record id="appointment_action" model="ir.actions.act_window">-->
+<!--        <field name="name">appointments</field>-->
+<!--        <field name="type">ir.actions.act_window</field>-->
+<!--        <field name="res_model">hospital.appointment</field>-->
+<!--        <field name="view_mode">tree,kanban,form</field>-->
+<!--&lt;!&ndash;        <field name="context">{'search_default_gender':1}</field>   &lt;!&ndash; group đơn, 'search_default_gender': với gender, appointment_name, responsible_id la filter khai bao trong the <group>     &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="context">{'search_default_appointment_name':1,'search_default_gender':1}</field>   &lt;!&ndash; group lồng group    &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <field name="context">{'search_default_appointment_name':1,'search_default_gender':1,'search_default_responsible_id':1}</field>  &lt;!&ndash; group lồng group &ndash;&gt;&ndash;&gt;-->
+<!--        <field name="context">{'search_default_appointment_name':1,'search_default_male':1}</field>  &lt;!&ndash; search roi den groupby &ndash;&gt;-->
+<!--        <field name="help" type="html">-->
+<!--            <p class="o_view_nocontent_smiling_face">-->
+<!--                create your first appointment!-->
+<!--            </p>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    <menuitem id="hospital_root"-->
+<!--              name="Hospital"-->
+<!--              sequence="10"/>-->
+
+<!--    <menuitem id="hospital_appointment_root"-->
+<!--              name="appointments"-->
+<!--              parent="hospital_root"-->
+<!--              />-->
+
+<!--    <menuitem id="hospital_appointment"-->
+<!--              name="appointments"-->
+<!--              parent="hospital_appointment_root"-->
+<!--              action="appointment_action"-->
+<!--              />-->
+
+</odoo>

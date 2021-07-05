@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_plan_sale_order,access.plan.sale.order,model_plan_sale_order,,1,1,1,1
+access_create_plan,access.create.plan,model_create_plan,,1,1,1,1
+access_plan_partner_line,access.plan.partner.line,model_plan_partner_line,,1,1,1,1
+

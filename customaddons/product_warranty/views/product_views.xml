@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_product_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='categ_id']" position="after">
+                    <field name="product_warranty" groups="intern_test2.group_advanced_sale"/>
+                    <field name="date_to" groups="intern_test2.group_advanced_sale"/>
+                    <field name="date_from" groups="intern_test2.group_advanced_sale"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_variant_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product_variant_tree_view_inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="product_warranty" groups="intern_test2.group_advanced_sale"/>
+                    <field name="time_interval" groups="intern_test2.group_advanced_sale"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_has_warranty_filter" model="ir.ui.view">
+           <field name="name">product.has.warranty.filter</field>
+           <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="after">
+                    <separator/>
+                    <filter string="Valid Warranty Date" name="valid_warranty"
+                            domain="[('check_valid_date','=',True)]"/>
+                    <separator/>
+                </xpath>
+           </field>
+        </record>
+
+        <record id="filter_valid_product_warranty_action" model="ir.actions.act_window">
+            <field name="name">Valid Product Warranty</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="domain">[('check_valid_date', '=', True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="valid_product_warranty"
+                  name="Products Have Valid Product Warranty"
+                  parent="sale.sale_menu_root"
+                  action="filter_valid_product_warranty_action"
+                  sequence="7"/>
+    </data>
+</odoo>

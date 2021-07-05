@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="quotation_form_view" model="ir.ui.view">
+            <field name="name">quotation.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(plan_sale_order.create_plan_wizard)d" id="action_create_sale_plan"
+                        string="Create Sale Plan" class="btn-secondary" type="action"
+                        attrs="{'invisible': [('plan', '!=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="plan" readonly="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

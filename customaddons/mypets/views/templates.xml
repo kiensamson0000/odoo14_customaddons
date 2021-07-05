@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Widget code = javascript (*.js), và file js phải được "include" / "import" (tức khai báo trong view backend) khi render frontend script js ta viết mới có tác dụng.
+    Ta tiến hành các bước sau:
+        Khai báo file js trong views/sale_order.xml
+        Khai báo xml mới tạo ở bước trên vào __manifest__.py
+        Tiến hành code widget trong js
+-->
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/mypets/static/src/js/bold.js"></script>
+            <script type="text/javascript" src="/mypets/static/src/js/btn_tree_multi_update.js"></script>
+<!--    khai báo đường dẫn  src đến file bold.js và file btn_tree_multi_update.js -->
+        </xpath>
+    </template>
+</odoo>

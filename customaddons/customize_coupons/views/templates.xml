@@ -1,0 +1,30 @@
+<odoo>
+    <template id="customer_discount_code" inherit_id="website_sale.total" active="True" customize_show="True">
+        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="before">
+            <tr t-if="not hide_coupon">
+                <td colspan="3" class="text-center text-xl-right noborder">
+                    <span class=''>
+                        <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
+                        <span>
+                            <p t-if="website_sale_order.partner_id.valide_code == True">
+                                <tr>
+                                    <strong>
+                                        <td>Applied Customer Code</td>
+                                    </strong>
+                                    <td t-esc="website_sale_order.partner_id.customer_discount_code"/>
+                                </tr>
+                            </p>
+                            <p t-else="">
+                                <tr>
+                                    <strong>
+                                        <td>No Code Applied</td>
+                                    </strong>
+                                </tr>
+                            </p>
+                        </span>
+                    </span>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="wizard_form_view">
+            <field name="name">wizard.form.view</field>
+            <field name="model">update.customer.code</field>
+            <field name="arch" type="xml">
+                <form string="update">
+                    <group>
+                        <field name="customer_discount_code"/>
+                    </group>
+                    <footer>
+                        <button name="update" string="Update" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="update_customer_code_action" model="ir.actions.act_window">
+            <field name="name">Update Coupons</field>
+            <field name="res_model">update.customer.code</field>
+            <field name="binding_model_id" ref="model_res_partner"/>
+            <field name="binding_view_types">list</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_form_view"/>
+        </record>
+    </data>
+</odoo>

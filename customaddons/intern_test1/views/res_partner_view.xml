@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_form_view_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="customer_discount_code" groups="intern_test1.group_advanced_sale"/>
+                    <field name="valid_code" invisible="1"/> <!-- invisible = 1 -->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_tree_view_inherit" model="ir.ui.view">
+            <field name="name">res.partner.tree.view.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="customer_discount_code" groups="intern_test1.group_advanced_sale"/>
+                    <field name="valid_code" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="filter_valid_customer_code_action" model="ir.actions.act_window">
+            <field name="name">Valid Customers Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('valid_code', '=', True)]</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="valid_customer_code"
+                  name="Customers Have Valid Code"
+                  parent="sale.sale_menu_root"
+                  action="filter_valid_customer_code_action"
+                  sequence="6"/>
+    </data>
+</odoo>

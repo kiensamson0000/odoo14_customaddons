@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Inherit Form View to Modify "quotation"  -->
+<odoo>
+    <data>
+        <record id="customize_coupons_form_view" model="ir.ui.view">
+            <field name="name">customize.coupons.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="customer_discount_code" optional="show" />
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="sale_order_discount_estimated" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit tree View to Modify "quotation"  -->
+        <record id="customize_coupons_tree_view" model="ir.ui.view">
+            <field name="name">customize.coupons.tree.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="customer_discount_code"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="sales_order_tree_view" model="ir.ui.view">
+           <field name="name">sales.order.tree.view</field>
+           <field name="model">sale.order</field>
+           <field name="inherit_id" ref="sale.view_order_tree"/>
+           <field name="arch" type="xml">
+               <xpath expr="//field[@name='name']" position="after">
+                   <field name='customer_discount_code' optional="show" />
+               </xpath>
+           </field>
+        </record>
+
+        <record id="special_customer_filter" model="ir.ui.view">
+            <field name="name">special.customer.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Special Customer" name="valide_code"
+                            domain="[('valide_code','=',True)]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

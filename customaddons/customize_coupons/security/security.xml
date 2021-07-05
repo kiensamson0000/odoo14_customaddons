@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--On/OFF: Setting → menu “User” → create/edit user → check choose “Other/1.Advanted Sale”-->
+
+<odoo>
+    <data>
+        <record id="group_advanced_sale" model="res.groups">
+            <field name="name">1. Advanced Sale</field>
+        </record>
+    </data>
+</odoo>

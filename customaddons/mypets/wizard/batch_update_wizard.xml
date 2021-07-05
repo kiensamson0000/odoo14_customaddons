@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- View: hiện thực action (act_window) để hiện thị form pop-up
+    Lưu ý: nếu có vấn đề permission sử dụng action / wizard cho user thường, update security @ mypets/security/ir.model.access.csv
+-->
+<odoo>
+    <data>
+        <record id="view_mypet_batch_update" model="ir.ui.view">
+            <field name="name">view.mypet.batch.update</field>
+            <field name="model">batch.update.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Batch Update">
+                    <group>
+                        <group>
+                            <field name="dob"/>
+                            <field name="gender"/>
+                            <field name="owner_id"/>
+                            <field name="basic_price"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <p>
+                        Apply updating on the selected record(s)?
+                    </p>
+<!--                Button confirm trỏ vào multi_update
+                    Button cancel đóng wizard form-->
+                    <footer>
+                        <button string="Confirm" name="multi_update" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mypet_batch_update" model="ir.actions.act_window">
+            <field name="name">Batch Update</field>
+            <field name="res_model">batch.update.wizard</field>
+<!--    action_mypet_batch_update: action act window được binding vào model my.pet thông qua đặc tả binding_model_id -->
+            <field name="binding_model_id" ref="model_my_pet"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mypet_batch_update"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
+
