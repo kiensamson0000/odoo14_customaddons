@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
+
+        <!-- Cron Module Haravan Integration -->
+        <!--        -->
         <record id="api_haravan_categories_cron" model="ir.cron">
             <field name="name">####API Categories</field>
             <field eval="True" name="active"/>
@@ -35,6 +38,45 @@
             <field name="model_id" ref="model_haravan_seller_orders"/>
             <field name="state">code</field>
             <field name="code">model.get_orders_haravan()</field>
+        </record>
+
+
+        <!-- Cron Module Product Template -->
+        <!--        -->
+            <record id="api_haravan_categories_product_template_cron" model="ir.cron">
+            <field name="name">####API Categories - Product Template</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_haravan_categories"/>
+            <field name="state">code</field>
+            <field name="code">model.get_categories_haravan_sale()</field>
+        </record>
+
+        <record id="api_haravan_seller_product_product_template_cron" model="ir.cron">
+            <field name="name">####API Products - Product Template</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_haravan_seller_product"/>
+            <field name="state">code</field>
+            <field name="code">model.get_product_haravan_sale()</field>
+        </record>
+
+        <record id="api_haravan_seller_orders_product_template_cron" model="ir.cron">
+            <field name="name">####API Orders - Product Template</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_haravan_seller_orders"/>
+            <field name="state">code</field>
+            <field name="code">model.get_orders_haravan_sale()</field>
         </record>
     </data>
 </odoo>

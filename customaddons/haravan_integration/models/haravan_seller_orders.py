@@ -29,6 +29,9 @@ class HaravanSellerOrders(models.Model):
     ########
     order_line = fields.One2many('product.order.haravan', 'product_in_list_order', string='Order Lines')
 
+    #############################
+    ## USE API ORDER "HARAVAN" ON Module "Haravan Integration"
+    #############################
     def get_orders_haravan(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -58,10 +61,9 @@ class HaravanSellerOrders(models.Model):
                     val['gateway'] = order['gateway']
                     # val['tracking_company'] = order['fulfillments']['tracking_company']
                     val['fulfillment_status'] = order['fulfillment_status']
-
                     existed_order = self.env["haravan.seller.orders"].sudo().search([('order_id', '=', order['id'])],
                                                                                     limit=1)
-                    if len(existed_order) < 1:
+                    if not existed_order:
                         new_record = self.env["haravan.seller.orders"].create(val)
                         if new_record:
                             if order['line_items']:
@@ -81,54 +83,110 @@ class HaravanSellerOrders(models.Model):
                                             new_record.order_line = [(0, 0, e) for e in list_product]
                                         list_product = []
                     else:
-                        # existed_order.write(val)
-                        existed_order.env['haravan.seller.orders'].sudo().write(val)
-                else:
-                    raise ValidationError(_('Đơn hàng không tồn tại'))
+                        existed_order.sudo().write(val)
+                        # existed_order.env['haravan.seller.orders'].sudo().write(val)
         except Exception as e:
             print(e)
 
-
     ###### bug chưa fix "error dữ liệu"
     ###
-    def create_orers_haravan(self):
+    # def create_orders_haravan(self):
+    #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
+    #     infor_product_order = self.env['product.order.haravan'].sudo().search([])[0]
+    #
+    #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
+    #     url = "https://apis.haravan.com/com/orders.json"
+    #     # name (check tên của customer đúng format(họ đệm & tên))
+    #     payload = json.dumps({
+    #         "order": {
+    #             "billing_address": {
+    #                 "address1": self.address1,
+    #                 "phone": self.phone,
+    #                 "name": self.name
+    #             },
+    #             "email": self.email,
+    #             "source_name": self.source_name,
+    #             "fulfillment_status": self.fulfillment_status,
+    #             "line_items": [
+    #                 {
+    #                     "variant_id": 44765421323529,
+    #                     "quantity": 1111121
+    #                 }]
+    #         }
+    #     })
+    #     headers = {
+    #         # 'Authorization': 'Bearer ' + current_seller.token_connect
+    #         'Content-Type': 'application/json',
+    #         'Authorization': 'Bearer ' + token_connect
+    #     }
+    #     response = requests.request("POST", url, headers=headers, data=payload)
+    #     print(response.text)  # check
+    #     if response.json()['order']:
+    #         print(response.json()['order'])
+    #         self.order_id = response.json()['order']['id']  # save order_id on database
+    #     else:
+    #         raise ValidationError(_('Create Product Fail in Sync with API Haravan'))
 
-        # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-        infor_product_order = self.env['product.order.haravan'].sudo().search([])[0]
-
-        token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-        url = "https://apis.haravan.com/com/orders.json"
-        # name (check tên của customer đúng format(họ đệm & tên))
-        payload = json.dumps({
-            "order": {
-                "billing_address": {
-                    "address1": self.address1,
-                    "phone": self.phone,
-                    "name": self.name
-                },
-                "email": self.email,
-                "source_name": self.source_name,
-                "fulfillment_status": self.fulfillment_status,
-                "line_items": [
-                    {
-                        "variant_id": 44765421323529,
-                        "quantity": 1111121
-                    }]
-            }
-        })
-        headers = {
-            # 'Authorization': 'Bearer ' + current_seller.token_connect
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token_connect
-        }
-        response = requests.request("POST", url, headers=headers, data=payload)
-
-        # for list_order in response.json()["orders"]:
-        #     if 'id' in list_order:
-        #         pass
-        #     else:
-        #         raise ValidationError(_('Error create/update order!'))
-
+    #############################
+    ## USE API ORDER "HARAVAN" on app "Sale"
+    #############################
+    def get_orders_haravan_sale(self):
+        pass
+    #     try:
+    #         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
+    #         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
+    #         url = "https://apis.haravan.com/com/orders.json"
+    #         payload = {}
+    #         headers = {
+    #             # 'Authorization': 'Bearer ' + current_seller.token_connect
+    #             'Authorization': 'Bearer ' + token_connect
+    #         }
+    #         response = requests.request("GET", url, headers=headers, data=payload)
+    #         result_order = response.json()
+    #         list_orders = result_order['orders']
+    #         val = {}
+    #         list_product = []
+    #         val
+    #         for order in list_orders:
+    #             if 'id' in order:
+    #                 val['order_id'] = order['id']
+    #                 val['name'] = order['billing_address']['name']
+    #                 val['address1'] = order['billing_address']['address1']
+    #                 val['email'] = order['email']
+    #                 val['phone'] = order['billing_address']['phone']
+    #                 val['created_at'] = order['created_at']
+    #                 val['source_name'] = order['source_name']
+    #                 val['subtotal_price'] = order['subtotal_price']
+    #                 val['financial_status'] = order['financial_status']
+    #                 val['gateway'] = order['gateway']
+    #                 # val['tracking_company'] = order['fulfillments']['tracking_company']
+    #                 val['fulfillment_status'] = order['fulfillment_status']
+    #                 existed_order = self.env["haravan.seller.orders"].sudo().search([('order_id', '=', order['id'])],
+    #                                                                                 limit=1)
+    #                 if not existed_order:
+    #                     new_record = self.env["haravan.seller.orders"].create(val)
+    #                     if new_record:
+    #                         if order['line_items']:
+    #                             val_product = order['line_items']
+    #                             for product in val_product:
+    #                                 if 'id' in product:
+    #                                     list_product.append({
+    #                                         'product_id': product['variant_id'],
+    #                                         'name': product['name'],
+    #                                         'sku': product['sku'],
+    #                                         'quantity': product['quantity'],
+    #                                         'vendor': product['vendor'],
+    #                                         'price': product['price'],
+    #                                         'type': product['type']
+    #                                     })
+    #                                     if list_product:
+    #                                         new_record.order_line = [(0, 0, e) for e in list_product]
+    #                                     list_product = []
+    #                 else:
+    #                     existed_order.sudo().write(val)
+    #                     # existed_order.env['haravan.seller.orders'].sudo().write(val)
+    #     except Exception as e:
+    #         print(e)
 
 class ProductOrderHaravan(models.Model):
     _name = "product.order.haravan"
@@ -144,6 +202,3 @@ class ProductOrderHaravan(models.Model):
 
     #####
     product_in_list_order = fields.Many2one('haravan.seller.orders', string="Appointment")
-
-
-

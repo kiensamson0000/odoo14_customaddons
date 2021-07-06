@@ -9,22 +9,55 @@ class HaravanCategories(models.Model):
 
     product_type = fields.Char('Product Type')
 
+    ### xem lai nhom san pham
+    ### https://apis.haravan.com/com/custom_collections.json
+    ### custom_collections
+
+    #############################
+    ## USE API CATEGORY "HARAVAN INTEGRATION" ON Module "Haravan Integration"
+    #############################
     def get_categories_haravan(self):
+        try:
+            # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
+            token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
+            url = "https://apis.haravan.com/com/products/types.json"
+            payload = {}
+            headers = {
+                # 'Authorization': 'Bearer ' + current_seller.token_connect
+                'Authorization': 'Bearer ' + token_connect
+            }
+            response = requests.request("GET", url, headers=headers, data=payload)
+            result_categories = response.json()
+            categories = result_categories["types"]
+            val = {}
+            if categories:
+                for cate in categories:
+                    try:
+                        val['product_type'] = cate
+                    except Exception as e:
+                        print(e)
+                    existed_cate = self.env['haravan.categories'].search([('product_type', '=', cate)], limit=1)
+                    if not existed_cate:
+                        self.env['haravan.categories'].create(val)
+                    else:
+                        existed_cate.write(val)
+        except Exception as e:
+            print(e)
+
+    #############################
+    ## USE API CATEGORY "HARAVAN INTEGRATION" on app "Sales"
+    #############################
+    def get_categories_haravan_sale(self):
         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
         url = "https://apis.haravan.com/com/products/types.json"
-
-        payload = ''
-
+        payload = {}
         headers = {
             # 'Authorization': 'Bearer ' + current_seller.token_connect
             'Authorization': 'Bearer ' + token_connect
         }
-
         response = requests.request("GET", url, headers=headers, data=payload)
-
         result_categories = response.json()
-
         categories = result_categories["types"]
         val = {}
         if categories:
@@ -33,13 +66,8 @@ class HaravanCategories(models.Model):
                     val['product_type'] = cate
                 except Exception as e:
                     print(e)
-                existed_cate = self.env['haravan.categories'].search([('product_type', '=', cate)], limit=1)
-                if len(existed_cate) < 1:
-                    self.create(val)
+                existed_cate = self.env['product.category'].search([('sendo_cate_id', '=', cate['id'])], limit=1)
+                if not existed_cate:
+                    self.env['product.category'].sudo().create(val)
                 else:
-                    existed_cate.env['haravan.categories'].write(val)
-
-
-
-
-
+                    existed_cate.write(val)

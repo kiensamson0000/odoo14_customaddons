@@ -16,8 +16,8 @@
     'category': 'Uncategorized',
     'version': '0.1',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base', 'mail'],
+    # note any module necessary for this one to work correctly
+    'depends': ['base', 'mail', 'sale_management', 'product', 'website_sale'],
 
     # always loaded
     'data': [
@@ -27,6 +27,7 @@
         'views/haravan_seller_product_variants_view.xml',
         'views/haravan_seller_view.xml',
         'views/haravan_seller_order_view.xml',
+        'views/product_template_inherit_view.xml',
         'wizard/connect_shop_wizard.xml',
         'data/api_haravan_cron.xml'
     ],

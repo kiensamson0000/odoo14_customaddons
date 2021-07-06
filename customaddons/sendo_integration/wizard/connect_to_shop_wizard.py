@@ -41,8 +41,3 @@ class SellerConnectWizard(models.TransientModel):
         else:
             raise ValidationError(_('My Shop Key or Secret Key is wrong.'))
 
-        # return rec.token_connection
-
-    # def update_token_sendo(self):
-    #     self.token_connection = self.get_token_sendo()
-

@@ -9,9 +9,15 @@
                 <form string="Product">
                     <header>
 <!--                        <button name="get_products_haravan" string="Get Products" class="oe_highlight" type="object"/>-->
-                        <button name="create_products_haravan" string="Create/Update Products" class="oe_highlight" type="object"/>
-                        <button name="create_products_haravan" string="Update Products" class="oe_highlight" type="object"/>
-                        <button name="delete_products_haravan" string="Delete Products" class="oe_highlight" type="object"/>
+                        <button name="create_products_haravan" string="Create Products" class="oe_highlight" type="object"
+                                confirm="Are you sure with your choice?"
+                                attrs="{'invisible':[('check_product', '=', True)]}"/>
+                        <button name="create_products_haravan" string="Update Products" class="oe_highlight" type="object"
+                                confirm="Are you sure with your choice?"
+                                attrs="{'invisible':[('check_product', '!=', True)]}"/>
+                        <button name="delete_products_haravan" string="Delete Products" class="oe_highlight" type="object"
+                                confirm="Are you sure with your choice?"
+                                attrs="{'invisible':[('check_product', '=', False)]}"/>
                     </header>
                     <sheet>
                         <field name="image_url" widget="image_url" class="oe_avatar"/>
@@ -30,13 +36,14 @@
                                         <field name="product_type"/>
                                         <field name="barcode"/>
                                         <field name="tags"/>
+                                        <field name="price"/>
                                     </group>
                                     <group>
-                                        <field name="price"/>
                                         <field name="vendor"/>
                                         <field name="image"/>
                                         <field name="created_at" readonly="1"/>
                                         <field name="updated_at" readonly="1"/>
+                                        <field name="check_product" readonly="1"/>
                                     </group>
                                 </group>
                                 <group string="Internal Notes">
