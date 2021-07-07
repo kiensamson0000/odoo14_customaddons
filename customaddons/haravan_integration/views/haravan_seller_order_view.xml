@@ -102,7 +102,7 @@
 
     <!-- This Menu Item must have a parent and an action -->
         <menuitem id="haravan_seller_order_menu" name="Order"
-                  parent="haravan_integration_root" sequence="2"/>
+                  parent="haravan_integration_root" sequence="1"/>
 
         <menuitem id="haravan_seller_order" name="Order"
                   parent="haravan_seller_order_menu" action="haravan_seller_order_view_action"/>

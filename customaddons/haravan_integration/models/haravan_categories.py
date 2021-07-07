@@ -9,10 +9,6 @@ class HaravanCategories(models.Model):
 
     product_type = fields.Char('Product Type')
 
-    ### xem lai nhom san pham
-    ### https://apis.haravan.com/com/custom_collections.json
-    ### custom_collections
-
     #############################
     ## USE API CATEGORY "HARAVAN INTEGRATION" ON Module "Haravan Integration"
     #############################
@@ -44,6 +40,13 @@ class HaravanCategories(models.Model):
         except Exception as e:
             print(e)
 
+
+class ProductCategoriesInherit(models.Model):
+    _inherit = "product.category"
+    _description = "Inherit product category"
+
+    haravan_product_type = fields.Char('Product Type')
+
     #############################
     ## USE API CATEGORY "HARAVAN INTEGRATION" on app "Sales"
     #############################
@@ -66,7 +69,7 @@ class HaravanCategories(models.Model):
                     val['product_type'] = cate
                 except Exception as e:
                     print(e)
-                existed_cate = self.env['product.category'].search([('sendo_cate_id', '=', cate['id'])], limit=1)
+                existed_cate = self.env['product.category'].search([('haravan_product_type', '=', cate)], limit=1)
                 if not existed_cate:
                     self.env['product.category'].sudo().create(val)
                 else:

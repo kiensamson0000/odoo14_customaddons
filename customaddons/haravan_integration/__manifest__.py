@@ -22,6 +22,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'views/haravan_collections_view.xml',
         'views/haravan_categories_view.xml',
         'views/haravan_seller_product_view.xml',
         'views/haravan_seller_product_variants_view.xml',

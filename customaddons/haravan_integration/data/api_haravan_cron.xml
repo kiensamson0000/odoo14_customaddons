@@ -16,6 +16,18 @@
             <field name="code">model.get_categories_haravan()</field>
         </record>
 
+        <record id="api_haravan_collections_cron" model="ir.cron">
+            <field name="name">####API Collections</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="model_id" ref="model_haravan_collections"/>
+            <field name="state">code</field>
+            <field name="code">model.get_collections_haravan()</field>
+        </record>
+
         <record id="api_haravan_seller_product_cron" model="ir.cron">
             <field name="name">####API Products</field>
             <field eval="True" name="active"/>
@@ -43,7 +55,7 @@
 
         <!-- Cron Module Product Template -->
         <!--        -->
-            <record id="api_haravan_categories_product_template_cron" model="ir.cron">
+        <record id="api_haravan_categories_product_template_cron" model="ir.cron">
             <field name="name">####API Categories - Product Template</field>
             <field eval="True" name="active"/>
             <field name="user_id" ref="base.user_root"/>
@@ -54,6 +66,18 @@
             <field name="state">code</field>
             <field name="code">model.get_categories_haravan_sale()</field>
         </record>
+
+<!--        <record id="api_haravan_collection_product_template_cron" model="ir.cron">-->
+<!--            <field name="name">####API Collection - Product Template</field>-->
+<!--            <field eval="True" name="active"/>-->
+<!--            <field name="user_id" ref="base.user_root"/>-->
+<!--            <field name="interval_number">1</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--            <field name="model_id" ref="model_haravan_collections"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.get_collections_haravan_sale()</field>-->
+<!--        </record>-->
 
         <record id="api_haravan_seller_product_product_template_cron" model="ir.cron">
             <field name="name">####API Products - Product Template</field>

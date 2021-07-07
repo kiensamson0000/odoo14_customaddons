@@ -23,7 +23,8 @@ class HaravanSellerProduct(models.Model):
     vendor = fields.Char('Company')
     description = fields.Char()
     price = fields.Float('Cost')  # null
-    barcode = fields.Char('Barcode')  # null     #compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
+    barcode = fields.Char(
+        'Barcode')  # null     #compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     created_at = fields.Char('Created at')
     updated_at = fields.Char('Updated at')
     check_product = fields.Boolean(compute='_compute_check_product_haravan')
@@ -57,25 +58,26 @@ class HaravanSellerProduct(models.Model):
             result_products = response.json()
             list_product = result_products['products']
             val = {}
-            for product in list_product:
-                if 'id' in product:
-                    val['seller_product_id'] = product['id']
-                    val['name'] = product['title']
-                    val['product_type'] = product['product_type']
-                    val['vendor'] = product['vendor']
-                    val['created_at'] = product['created_at']
-                    val['updated_at'] = product['updated_at']
-                    # val['image'] = base64.b64encode(urlopen(product["images"][1]["src"]).read())
-                    if 'images' is None:  # xu ly de check values = null
-                        for image in product['images']:
-                            if 'id' in image:
-                                val['image_url'] = product["images"][0]["src"]
-                    existed_product = self.env["haravan.seller.product"].search(
-                        [('seller_product_id', '=', product['id'])], limit=1)
-                    if not existed_product:
-                        self.env["haravan.seller.product"].create(val)
-                    else:
-                        existed_product.write(val)
+            if list_product:
+                for product in list_product:
+                    if 'id' in product:
+                        val['seller_product_id'] = product['id']
+                        val['name'] = product['title']
+                        val['product_type'] = product['product_type']
+                        val['vendor'] = product['vendor']
+                        val['created_at'] = product['created_at']
+                        val['updated_at'] = product['updated_at']
+                        # val['image'] = base64.b64encode(urlopen(product["images"][1]["src"]).read())
+                        if 'images' is None:  # xu ly de check values = null
+                            for image in product['images']:
+                                if 'id' in image:
+                                    val['image_url'] = product["images"][0]["src"]
+                        existed_product = self.env["haravan.seller.product"].search(
+                            [('seller_product_id', '=', product['id'])], limit=1)
+                        if not existed_product:
+                            self.env["haravan.seller.product"].create(val)
+                        else:
+                            existed_product.write(val)
         except Exception as e:
             print(e)
 
@@ -138,7 +140,7 @@ class HaravanSellerProduct(models.Model):
                 'Authorization': 'Bearer ' + token_connect
             }
             response = requests.request("POST", url, headers=headers, data=payload)
-            print(response.text) #check
+            print(response.text)  # check
             if response.json()['product']:
                 print(response.json()['product'])
                 self.seller_product_id = int(response.json()['product']['id'])  # save seller_product_id on database
@@ -274,7 +276,6 @@ class HaravanSellerProduct(models.Model):
         if response.json()['error']:
             raise ValidationError(_('Sản phẩm không tồn tại'))
 
-
     #############################
     ## USE API PRODUCT "HARAVAN" ON APP "SALES"
     #############################
@@ -293,16 +294,21 @@ class HaravanSellerProduct(models.Model):
         val = {}
         for product in list_product:
             if 'id' in product:
-                val['seller_product_id'] = product['id']
-                val['name'] = product['title']
-                val['product_type'] = product['product_type']
-                val['vendor'] = product['vendor']
-                val['created_at'] = product['created_at']
-                val['updated_at'] = product['updated_at']
+                # link ref to collections
+                list_collections = self.env['haravan.collections'].sudo().search(
+                    ['haravan_collec_id', '=', product['']], limit=1)
+
+
+                val['haravan_product_id'] = product['id']
+                val['haravan_name'] = product['title']
+                val['haravan_product_type'] = product['product_type']
+                val['haravan_vendor'] = product['vendor']
+                val['haravan_created_at'] = product['created_at']
+                val['haravan_updated_at'] = product['updated_at']
                 if 'images' is None:  # xu ly de check values = null
                     for image in product['images']:
                         if 'id' in image:
-                            val['image_url'] = product["images"][0]["src"]
+                            val['haravan_image_url'] = product["images"][0]["src"]
                 existed_product = self.env["product.template"].search([('name', '=', product['title'])],
                                                                       limit=1)
                 if not existed_product:
@@ -310,6 +316,3 @@ class HaravanSellerProduct(models.Model):
                 else:
                     existed_product.write(val)
     ### try catch
-
-
-

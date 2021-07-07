@@ -74,7 +74,7 @@
               web_icon="haravan_integration,static/description/icon.png"/>
 
     <menuitem id="haravan_seller_product_menu" name="Product"
-              parent="haravan_integration_root" sequence="3"/>
+              parent="haravan_integration_root" sequence="2"/>
 
     <menuitem id="haravan_seller_product" name="Product"
               parent="haravan_seller_product_menu" action="haravan_seller_product_view_action"/>

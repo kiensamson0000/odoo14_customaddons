@@ -43,6 +43,6 @@
         <!-- This Menu Item must have a parent and an action -->
         <menuitem id="haravan_categories_menu" name="Categories"
                   parent="haravan_integration_root" action="haravan_categories_view_action"
-                  sequence="4"/>
+                  sequence="3"/>
     </data>
 </odoo>
