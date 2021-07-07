@@ -40,13 +40,6 @@ class HaravanCategories(models.Model):
         except Exception as e:
             print(e)
 
-
-class ProductCategoriesInherit(models.Model):
-    _inherit = "product.category"
-    _description = "Inherit product category"
-
-    haravan_product_type = fields.Char('Product Type')
-
     #############################
     ## USE API CATEGORY "HARAVAN INTEGRATION" on app "Sales"
     #############################
@@ -66,11 +59,12 @@ class ProductCategoriesInherit(models.Model):
         if categories:
             for cate in categories:
                 try:
-                    val['product_type'] = cate
+                    val['name'] = cate
+                    val['check_cate_haravan'] = True
                 except Exception as e:
                     print(e)
-                existed_cate = self.env['product.category'].search([('haravan_product_type', '=', cate)], limit=1)
+                existed_cate = self.env['product.category'].search([('name', '=', cate)], limit=1)
                 if not existed_cate:
-                    self.env['product.category'].sudo().create(val)
+                    self.env['product.category'].create(val)
                 else:
                     existed_cate.write(val)

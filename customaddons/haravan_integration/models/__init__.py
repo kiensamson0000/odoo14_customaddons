@@ -6,4 +6,5 @@ from . import haravan_seller
 from . import haravan_seller_products
 from . import haravan_seller_orders
 from . import haravan_seller_product_variants
+from . import product_category_inherit
 from . import product_template_inherit

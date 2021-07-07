@@ -2,7 +2,7 @@ import requests
 import json
 
 from odoo import models, fields, api, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ProductTemplateInherit(models.Model):
@@ -13,6 +13,9 @@ class ProductTemplateInherit(models.Model):
     # /home/kienkhuat/Documents/odoo/addons/product/views/product_views.xml
     # /home/kienkhuat/Documents/odoo/addons/product/models/product.py             product_variants
 
+
+##### xoa bo ca field thua da co trong core
+
     haravan_product_id = fields.Char(string='Product ID', store=True)
     haravan_name = fields.Char(string='Product Name', store=True)
     haravan_image_url = fields.Char(store=True)  # save url image --> hien thi trong view = (widget="image") #1
@@ -21,9 +24,9 @@ class ProductTemplateInherit(models.Model):
     haravan_description = fields.Char()
     haravan_price = fields.Float('Cost')  # null
     haravan_barcode = fields.Char('Barcode')  # null #compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
-    haravan_created_at = fields.Char('Created at')  # 1
-    haravan_updated_at = fields.Char('Updated at')  # 1
-    check_product_haravan = fields.Boolean(compute='_check_product_haravan', store=True)
+    haravan_created_at = fields.Char('Created at')
+    haravan_updated_at = fields.Char('Updated at')
+    check_product_haravan = fields.Boolean(compute='_compute_check_product')
 
     ### add 1 field 'selection' chon the loai
     ### add 1 field 'quantity'
@@ -33,24 +36,23 @@ class ProductTemplateInherit(models.Model):
     haravan_tags = fields.Char("Tag")
     haravan_image = fields.Char("Image")
 
-    def _check_product_haravan(self):
+    def _compute_check_product(self):
         for rec in self:
             if rec.haravan_product_id:
                 rec.check_product_haravan = True
             else:
                 rec.check_product_haravan = False
 
-    ####### tao button trong header
-    ####### giong nhu cac nut trong action(khi chon create/update trong action --> auto run)
-    ####### tao variant chung với product
-    def create_products_sales(self):  # create/update
+    ### chu y xu y 1 so dieu kien cho field
+
+    ####### chua xu ly dươc variant chung với product
+    def create_products_sales(self):
         # try:
         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-
-        ####### xu ky truong hop ID khi create/update bi trung => can't create/update
-
         url = "https://apis.haravan.com/com/products.json"
+
+        # chu y phai an vao cac truong field
         payload = json.dumps({
             "product": {
                 "title": self.name,
@@ -104,12 +106,12 @@ class ProductTemplateInherit(models.Model):
             'Authorization': 'Bearer ' + token_connect
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        print(response.text) #check
+        print(response.text)     #check
         if response.json()['product']:
-            print(response.json()['product'])
-            existed_product_haravan = self.env['haravan.seller.product'].search(
-                    [('default_code', '=', self.default_code)], limit=1)
-            existed_product_haravan.seller_product_id = response.json()['product']['id']  #chu y ep kieu neu kieu dlu !=string
+            print(response.json()['product']) #check
+            existed_product_haravan = self.env['product.template'].search(
+                [('default_code', '=', self.default_code)], limit=1)
+            existed_product_haravan.haravan_product_id = response.json()['product']['id']  #chu y ep kieu neu kieu dlu !=string
         else:
             raise ValidationError(_('Create Product Fail in Sync with API Haravan'))
 

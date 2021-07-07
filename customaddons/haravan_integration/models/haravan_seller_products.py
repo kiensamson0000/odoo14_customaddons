@@ -68,7 +68,7 @@ class HaravanSellerProduct(models.Model):
                         val['created_at'] = product['created_at']
                         val['updated_at'] = product['updated_at']
                         # val['image'] = base64.b64encode(urlopen(product["images"][1]["src"]).read())
-                        if 'images' is None:  # xu ly de check values = null
+                        if product['images']:  # xu ly de check values = null
                             for image in product['images']:
                                 if 'id' in image:
                                     val['image_url'] = product["images"][0]["src"]
@@ -81,7 +81,7 @@ class HaravanSellerProduct(models.Model):
         except Exception as e:
             print(e)
 
-    ####### xu ly variant chung với product
+    ####### chua xu ly variant cuar product
     def create_products_haravan(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -149,7 +149,6 @@ class HaravanSellerProduct(models.Model):
         except Exception as e:
             print(e)
 
-    ####### tao wizard trong action
     ###
     # def update_products_haravan(self):  # update
     #     # try:
@@ -280,39 +279,44 @@ class HaravanSellerProduct(models.Model):
     ## USE API PRODUCT "HARAVAN" ON APP "SALES"
     #############################
     def get_product_haravan_sale(self):
-        # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-        token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-        url = "https://apis.haravan.com/com/products.json"
-        payload = {}
-        headers = {
-            # 'Authorization': 'Bearer ' + current_seller.token_connect
-            'Authorization': 'Bearer ' + token_connect
-        }
-        response = requests.request("GET", url, headers=headers, data=payload)
-        result_products = response.json()
-        list_product = result_products['products']
-        val = {}
-        for product in list_product:
-            if 'id' in product:
-                # link ref to collections
-                list_collections = self.env['haravan.collections'].sudo().search(
-                    ['haravan_collec_id', '=', product['']], limit=1)
+        try:
+            # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
+            token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
+            url = "https://apis.haravan.com/com/products.json"
+            payload = {}
+            headers = {
+                # 'Authorization': 'Bearer ' + current_seller.token_connect
+                'Authorization': 'Bearer ' + token_connect
+            }
+            response = requests.request("GET", url, headers=headers, data=payload)
+            result_products = response.json()
+            list_product = result_products['products']
+            val = {}
+            for product in list_product:
+                if 'id' in product:
+                    # link ref to collections
+                    # note: get category trước nếu không bị error
+                    existed_cate_product = self.env['product.category'].search(
+                        [('name', '=', product['product_type'])], limit=1)
+                    val['categ_id'] = existed_cate_product.id
+                    val['haravan_product_id'] = product['id']
+                    val['name'] = product['title']
+                    val['haravan_product_type'] = product['product_type']
+                    val['haravan_vendor'] = product['vendor']
+                    val['haravan_created_at'] = product['created_at']
+                    val['haravan_updated_at'] = product['updated_at']
 
-
-                val['haravan_product_id'] = product['id']
-                val['haravan_name'] = product['title']
-                val['haravan_product_type'] = product['product_type']
-                val['haravan_vendor'] = product['vendor']
-                val['haravan_created_at'] = product['created_at']
-                val['haravan_updated_at'] = product['updated_at']
-                if 'images' is None:  # xu ly de check values = null
-                    for image in product['images']:
-                        if 'id' in image:
-                            val['haravan_image_url'] = product["images"][0]["src"]
-                existed_product = self.env["product.template"].search([('name', '=', product['title'])],
-                                                                      limit=1)
-                if not existed_product:
-                    self.env["product.template"].create(val)
-                else:
-                    existed_product.write(val)
-    ### try catch
+                    # error don't read url image
+                    # reason: url private
+                    # if product['images']:
+                    #     for image in product['images']:
+                    #         if 'id' in image:
+                    #             val['image_1920'] = base64.b64encode(urlopen(product["images"][0]["src"]).read())
+                    existed_product = self.env["product.template"].search([('haravan_product_id', '=', product['id'])],
+                                                                          limit=1)
+                    if not existed_product:
+                        self.env["product.template"].sudo().create(val)
+                    else:
+                        existed_product.write(val)
+        except Exception as e:
+            print(e)
