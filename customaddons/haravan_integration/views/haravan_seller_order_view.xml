@@ -108,7 +108,7 @@
                   parent="haravan_seller_order_menu" action="haravan_seller_order_view_action"/>
 
         <menuitem id="haravan_seller_customer" name="Customers"
-                  parent="haravan_seller_order_menu" />
+                  parent="haravan_seller_order_menu"/>
 
 <!--    <menuitem id="haravan_seller_order" name="Customers"-->
 <!--              parent="haravan_seller_order_menu" action=""/>-->

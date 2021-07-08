@@ -29,8 +29,15 @@ class HaravanSellerOrders(models.Model):
     ########
     order_line = fields.One2many('product.order.haravan', 'product_in_list_order', string='Order Lines')
 
+    @api.constrains('subtotal_price')
+    def _check_subtotal_price(self):
+        for rec in self:
+            if rec.subtotal_price <= 0:
+                raise ValidationError(_("Subtotal Price need more than 0 (>0)."))
+
+
     #############################
-    ## USE API ORDER "HARAVAN" ON Module "Haravan Integration"
+    ## USE API ORDER ON Module "Haravan Integration"
     #############################
     def get_orders_haravan(self):
         try:
@@ -88,8 +95,8 @@ class HaravanSellerOrders(models.Model):
         except Exception as e:
             print(e)
 
-    ###### bug chưa fix "error dữ liệu"
-    ###
+    ### CREATE
+    ################
     # def create_orders_haravan(self):
     #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
     #     infor_product_order = self.env['product.order.haravan'].sudo().search([])[0]
@@ -127,8 +134,11 @@ class HaravanSellerOrders(models.Model):
     #     else:
     #         raise ValidationError(_('Create Product Fail in Sync with API Haravan'))
 
+
+
+
     #############################
-    ## USE API ORDER "HARAVAN" on app "Sale"
+    ## USE API ORDER ON APP "SALE"
     #############################
     def get_orders_haravan_sale(self):
         pass
@@ -187,6 +197,9 @@ class HaravanSellerOrders(models.Model):
     #                     # existed_order.env['haravan.seller.orders'].sudo().write(val)
     #     except Exception as e:
     #         print(e)
+
+
+
 
 class ProductOrderHaravan(models.Model):
     _name = "product.order.haravan"

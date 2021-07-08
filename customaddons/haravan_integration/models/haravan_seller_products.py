@@ -2,7 +2,6 @@ import requests
 import json
 from urllib.request import urlopen
 import base64
-
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import ValidationError
 
@@ -11,26 +10,22 @@ class HaravanSellerProduct(models.Model):
     _name = 'haravan.seller.product'
     _description = 'API Products Haravan'
 
-    # /home/kienkhuat/Documents/odoo/addons/product/models/product_template.py    product
-    # /home/kienkhuat/Documents/odoo/addons/product/views/product_views.xml
-    # /home/kienkhuat/Documents/odoo/addons/product/models/product.py             product_variants
-
     seller_product_id = fields.Char(string='Product ID', store=True)
     name = fields.Char(string='Product Name', store=True)
     image_url = fields.Char(store=True)  # save url image --> hien thi trong view = (widget="image")
     backup_get_product_data = fields.Text()  # add 1 field to  save get_data of file json
     product_type = fields.Char("Product Type")
+    tags = fields.Char("Tag")
     vendor = fields.Char('Company')
     description = fields.Char()
-    price = fields.Float('Cost')  # null
-    barcode = fields.Char(
-        'Barcode')  # null     #compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
+    price = fields.Float('Cost')
+    barcode = fields.Char('Barcode')
     created_at = fields.Char('Created at')
     updated_at = fields.Char('Updated at')
     check_product = fields.Boolean(compute='_compute_check_product_haravan')
     list_product = fields.Text()  # add 1 field save get_data_product of file json
 
-    # create fields to create/update product
+    # create add fields to create/update product
     tags = fields.Char("Tag")
     image = fields.Char("Image")
 
@@ -42,7 +37,7 @@ class HaravanSellerProduct(models.Model):
                 rec.check_product = False
 
     #############################
-    ## USE API PRODUCT "HARAVAN" ON Module Haravan Integration
+    ## USE API PRODUCT ON Module Haravan Integration
     #############################
     def get_products_haravan(self):
         try:
@@ -65,6 +60,7 @@ class HaravanSellerProduct(models.Model):
                         val['name'] = product['title']
                         val['product_type'] = product['product_type']
                         val['vendor'] = product['vendor']
+                        val['tags'] = product['tags']
                         val['created_at'] = product['created_at']
                         val['updated_at'] = product['updated_at']
                         # val['image'] = base64.b64encode(urlopen(product["images"][1]["src"]).read())
@@ -149,8 +145,13 @@ class HaravanSellerProduct(models.Model):
         except Exception as e:
             print(e)
 
-    ###
-    # def update_products_haravan(self):  # update
+
+
+
+
+    ####UPDATE
+    ############################################3
+    # def update_products_haravan(self):
     #     # try:
     #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
     #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
@@ -258,9 +259,13 @@ class HaravanSellerProduct(models.Model):
     #
     #     return res
 
+
+
     ###### API dùng để xóa 1 sản phẩn theo id
+    ###DELETE
     ######
     def delete_products_haravan(self):
+    # try:
         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
         url = "https://apis.haravan.com/com/products/" + self.seller_product_id + ".json"
@@ -274,6 +279,17 @@ class HaravanSellerProduct(models.Model):
         # print(response.text)
         if response.json()['error']:
             raise ValidationError(_('Sản phẩm không tồn tại'))
+    # except Exception as e:
+    #     print(e)
+
+
+
+
+
+
+
+
+
 
     #############################
     ## USE API PRODUCT "HARAVAN" ON APP "SALES"
@@ -294,24 +310,46 @@ class HaravanSellerProduct(models.Model):
             val = {}
             for product in list_product:
                 if 'id' in product:
-                    # link ref to collections
-                    # note: get category trước nếu không bị error
+                    ### link ref to categories, company
+                    ### Note: get "category,company" trước nếu không bị error
+
+                    ### categories chưa tự ăn vào
                     existed_cate_product = self.env['product.category'].search(
                         [('name', '=', product['product_type'])], limit=1)
-                    val['categ_id'] = existed_cate_product.id
-                    val['haravan_product_id'] = product['id']
+                    if 'categ_id' in existed_cate_product:
+                        val['categ_id'] = existed_cate_product.id
+
+                    ### API get product ko tra ve ten company nen ko the search lay ten company de hien thi nhu categories
+                    # existed_company = self.env['res.company'].search([('name', '=', companies['name'])], limit=1)
+                    # val['company_id'] = existed_company_product.id
+
+                    # field có sẵn in core
                     val['name'] = product['title']
+                    # val['type'] = 'product'
+                    val['sale_ok'] = True
+                    val['purchase_ok'] = False
+                    val['description'] = product['body_html']
+                    val['taxes_id'] = None
+                    val['is_published'] = True  # field in model Webiste(Shop) pulish product
+                    # standard_price
+                    # list_price
+                    # default_code   tuong duong sku sanpham bien the (chua xu ly duoc)
+                    # barcode
+                    # company_id "xu ly giong categories"
+
+                    # field add khi core không có sẵn
+                    val['haravan_product_id'] = product['id']
                     val['haravan_product_type'] = product['product_type']
-                    val['haravan_vendor'] = product['vendor']
+                    # val['haravan_tags'] = product['tags']
                     val['haravan_created_at'] = product['created_at']
                     val['haravan_updated_at'] = product['updated_at']
-
-                    # error don't read url image
-                    # reason: url private
-                    # if product['images']:
-                    #     for image in product['images']:
-                    #         if 'id' in image:
-                    #             val['image_1920'] = base64.b64encode(urlopen(product["images"][0]["src"]).read())
+                    if product['images']:  # xu ly de check values = null
+                        for image in product['images']:
+                            if 'id' in image:
+                                val['haravan_image_url'] = product["images"][0]["src"]
+                                # error don't read url image
+                                # reason: url private
+                                # val['image_1920'] = base64.b64encode(urlopen(product["images"][0]["src"]).read())
                     existed_product = self.env["product.template"].search([('haravan_product_id', '=', product['id'])],
                                                                           limit=1)
                     if not existed_product:

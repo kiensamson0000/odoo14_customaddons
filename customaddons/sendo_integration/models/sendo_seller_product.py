@@ -152,7 +152,6 @@ class SendoSellerProduct(models.Model):
                         self.env['product.template'].create(val)
                     else:
                         existed_seller_product.write(val)
-
         except Exception as e:
             print(e)
 

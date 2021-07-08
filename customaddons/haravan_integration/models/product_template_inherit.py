@@ -9,32 +9,20 @@ class ProductTemplateInherit(models.Model):
     _inherit = 'product.template'
     _description = 'Inherit product template'
 
-    # /home/kienkhuat/Documents/odoo/addons/product/models/product_template.py    product
-    # /home/kienkhuat/Documents/odoo/addons/product/views/product_views.xml
-    # /home/kienkhuat/Documents/odoo/addons/product/models/product.py             product_variants
-
-
 ##### xoa bo ca field thua da co trong core
 
     haravan_product_id = fields.Char(string='Product ID', store=True)
-    haravan_name = fields.Char(string='Product Name', store=True)
-    haravan_image_url = fields.Char(store=True)  # save url image --> hien thi trong view = (widget="image") #1
     haravan_product_type = fields.Char("Product Type")
-    haravan_vendor = fields.Char('Company')
-    haravan_description = fields.Char()
+    haravan_tags = fields.Char("Tag")
+    haravan_image_url = fields.Char(store=True)  # save url image --> hien thi trong view = (widget="image") #1
     haravan_price = fields.Float('Cost')  # null
     haravan_barcode = fields.Char('Barcode')  # null #compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
     haravan_created_at = fields.Char('Created at')
     haravan_updated_at = fields.Char('Updated at')
     check_product_haravan = fields.Boolean(compute='_compute_check_product')
 
-    ### add 1 field 'selection' chon the loai
     ### add 1 field 'quantity'
     ### add 1 field ma giam gia (khuyen mai)
-
-    # create fields to create/update product
-    haravan_tags = fields.Char("Tag")
-    haravan_image = fields.Char("Image")
 
     def _compute_check_product(self):
         for rec in self:
@@ -46,6 +34,8 @@ class ProductTemplateInherit(models.Model):
     ### chu y xu y 1 so dieu kien cho field
 
     ####### chua xu ly dươc variant chung với product
+    ## CREATE
+    ###########
     def create_products_sales(self):
         # try:
         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -118,8 +108,11 @@ class ProductTemplateInherit(models.Model):
         # except Exception as e:
         #     print(e)
 
-        ####### tao wizard trong action
-        ###
+
+
+
+    ## UPDATE
+    ###########
         # def update_products_haravan(self):  # update
         #     # try:
         #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -218,10 +211,13 @@ class ProductTemplateInherit(models.Model):
         # except Exception as e:
         #     print(e)
 
-        ####### tao wizard trong action
-        ###### API dùng để xóa 1 sản phẩn theo id
-        ###### Tao 2 field, 1 filed many2one id, 1 filed ten san pham ==> chon(search) 1 id => ten san pham (muc dich: check lai ten san pham dung chua moi xoa)
-    #
+
+
+
+
+    ###### API dùng để xóa 1 sản phẩn theo id
+    ## DELETE
+    ###########
     # def delete_products_haravan(self):
     #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
     #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
@@ -238,40 +234,3 @@ class ProductTemplateInherit(models.Model):
     #
     #     if response.json()['error']:
     #         raise ValidationError(_('Sản phẩm không tồn tại'))
-    #
-    # #############################
-    # ## USE API "HARAVAN INTEGRATION" ON APP "SALES"
-    # #############################
-    #
-    # def get_product_haravan_sale(self):
-    #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-    #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-    #     url = "https://apis.haravan.com/com/products.json"
-    #     payload = {}
-    #     headers = {
-    #         # 'Authorization': 'Bearer ' + current_seller.token_connect
-    #         'Authorization': 'Bearer ' + token_connect
-    #     }
-    #     response = requests.request("GET", url, headers=headers, data=payload)
-    #     result_products = response.json()
-    #     list_product = result_products['products']
-    #     val = {}
-    #     if 'id' in list_product:
-    #         for product in list_product:
-    #             if 'id' in product:
-    #                 val['seller_product_id'] = product['id']
-    #                 val['name'] = product['title']
-    #                 val['product_type'] = product['product_type']
-    #                 val['vendor'] = product['vendor']
-    #                 val['created_at'] = product['created_at']
-    #                 val['updated_at'] = product['updated_at']
-    #                 if 'images' is None:  # xu ly de check values = null
-    #                     for image in product['images']:
-    #                         if 'id' in image:
-    #                             val['image_url'] = product["images"][0]["src"]
-    #                 existed_product = self.env["product.template"].search([('seller_product_id', '=', product['id'])],
-    #                                                                       limit=1)
-    #                 if not existed_product:
-    #                     self.env["product.template"].create(val)
-    #                 else:
-    #                     existed_product.write(val)

@@ -25,13 +25,14 @@
 
                 <xpath expr="//field[@name='barcode']" position="after">
                     <!-- Add your fields or attributes here -->
+                    <field name="haravan_tags"/>
                     <field name="haravan_created_at" readonly="1"/>
                     <field name="haravan_updated_at" readonly="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='company_id']" position="after">
                     <!-- Add your fields or attributes here -->
-                    <field name="haravan_image_url" widget="image_url" class="oe_avatar"/>
+                    <field name="haravan_image_url"/>
                     <field name="check_product_haravan"/>
                 </xpath>
             </field>
