@@ -316,8 +316,8 @@ class HaravanSellerProduct(models.Model):
                     ### categories chưa tự ăn vào
                     existed_cate_product = self.env['product.category'].search(
                         [('name', '=', product['product_type'])], limit=1)
-                    if 'categ_id' in existed_cate_product:
-                        val['categ_id'] = existed_cate_product.id
+                    # if 'categ_id' in existed_cate_product:
+                    val['categ_id'] = existed_cate_product.id
 
                     ### API get product ko tra ve ten company nen ko the search lay ten company de hien thi nhu categories
                     # existed_company = self.env['res.company'].search([('name', '=', companies['name'])], limit=1)
