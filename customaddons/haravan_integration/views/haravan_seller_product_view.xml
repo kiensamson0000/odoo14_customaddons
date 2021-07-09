@@ -12,7 +12,7 @@
                         <button name="create_products_haravan" string="Create Products" class="oe_highlight" type="object"
                                 confirm="Are you sure with your choice?"
                                 attrs="{'invisible':[('check_product', '=', True)]}"/>
-                        <button name="create_products_haravan" string="Update Products" class="oe_highlight" type="object"
+                        <button name="update_products_haravan" string="Update Products" class="oe_highlight" type="object"
                                 confirm="Are you sure with your choice?"
                                 attrs="{'invisible':[('check_product', '!=', True)]}"/>
                         <button name="delete_products_haravan" string="Delete Products" class="oe_highlight" type="object"

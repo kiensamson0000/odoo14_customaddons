@@ -8,15 +8,18 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
                 <header>
-                    <button name="create_products_sales" string="Create Haravan Products" class="oe_highlight" type="object"
+                    <button name="create_products_sales" string="Create Haravan Products" class="oe_highlight"
+                            type="object"
                             confirm="Are you sure with your choice?"
                             attrs="{'invisible':[('check_product_haravan', '=', True)]}"/>
-                    <!--                    <button name="" string="Update Haravan Products" class="oe_highlight" type="object"
-                                                    confirm="Are you sure with your choice?"-->
-                    <!--                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>-->
-                    <!--                    <button name="" string="Delete Haravan Products" class="oe_highlight" type="object"
-                                                    confirm="Are you sure with your choice?"-->
-                    <!--                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>-->
+                    <button name="update_products_haravan_sales" string="Update Haravan Products" class="oe_highlight"
+                            type="object"
+                            confirm="Are you sure with your choice?"
+                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>
+                    <button name="delete_products_haravan_sales" string="Delete Haravan Products" class="oe_highlight"
+                            type="object"
+                            confirm="Are you sure with your choice?"
+                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>
                 </header>
                 <xpath expr="//field[@name='type']" position="before">
                     <!-- Add your fields or attributes here -->
@@ -52,20 +55,20 @@
             </field>
         </record>
 
-<!--        Don't create Filter for Category because api "category" only have product_name -> can't phân biệt -->
+        <!-- Don't create Filter for Category because api "category" only have product_name -> can't phân biệt -->
 
         <!-- Add Filter Search Category Product Haravan In Product Template-->
-<!--        <record id="product_categories_search_haravan_product" model="ir.ui.view">-->
-<!--            <field name="name">product.categories.search.haravan.product</field>-->
-<!--            <field name="model">product.template</field>-->
-<!--            <field name="inherit_id" ref="product.product_category_search_view"/>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <xpath expr="//field[@name='parent_id']" position="after">-->
-<!--                    &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
-<!--                    <filter name="haravan_product_cate" string="Haravan Product Category"-->
-<!--                            domain="[('', '=', '')]"/>-->
-<!--                </xpath>-->
-<!--            </field>-->
-<!--        </record>-->
+        <!--        <record id="product_categories_search_haravan_product" model="ir.ui.view">-->
+        <!--            <field name="name">product.categories.search.haravan.product</field>-->
+        <!--            <field name="model">product.template</field>-->
+        <!--            <field name="inherit_id" ref="product.product_category_search_view"/>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//field[@name='parent_id']" position="after">-->
+        <!--                    &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
+        <!--                    <filter name="haravan_product_cate" string="Haravan Product Category"-->
+        <!--                            domain="[('', '=', '')]"/>-->
+        <!--                </xpath>-->
+        <!--            </field>-->
+        <!--        </record>-->
     </data>
 </odoo>
