@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
 
 
-# class HaravanIntegration(http.Controller):
-#     @http.route('/haravan_integration/haravan_integration/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class HaravanIntegration(http.Controller):
+    @http.route('/webhooks', auth='public', type='http', methods=['GET'], csrf=False)
+    def index(self, **kw):
+        return "Hello, world"
 
 #     @http.route('/haravan_integration/haravan_integration/objects/', auth='public')
 #     def list(self, **kw):

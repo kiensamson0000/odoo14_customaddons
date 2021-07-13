@@ -2,6 +2,7 @@ import requests
 import json
 from urllib.request import urlopen
 import base64
+
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import ValidationError
 
@@ -37,7 +38,6 @@ class HaravanSellerProduct(models.Model):
 
     #############################
     ## USE API PRODUCT ON Module "Haravan Integration"
-    #############################
     def get_products_haravan(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -45,7 +45,7 @@ class HaravanSellerProduct(models.Model):
             url = "https://apis.haravan.com/com/products.json"
             payload = {}
             headers = {
-                # 'Authorization': 'Bearer ' + current_seller.token_connect
+                #'Authorization': 'Bearer ' + current_seller.token_connect
                 'Authorization': 'Bearer ' + token_connect
             }
             response = requests.request("GET", url, headers=headers, data=payload)
@@ -76,7 +76,7 @@ class HaravanSellerProduct(models.Model):
         except Exception as e:
             print(e)
 
-    ####### chua xu ly variant cuar product
+    ####### chua xu ly variant cua product
     def create_products_haravan(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -145,134 +145,17 @@ class HaravanSellerProduct(models.Model):
             print(e)
 
     ####UPDATE
+    ####
     ######################
     def update_products_haravan(self):
         pass
-        # # try:
-        # # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-        # token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-        # url = "https://apis.haravan.com/com/products/" + self.seller_product_id + ".json"
-        # payload = json.dumps({
-        #     "product": {
-        #         "body_html": self.description or 'string',
-        #         "body_plain": None,
-        #         "created_at": None,
-        #         "handle": None,
-        #         "id": self.seller_product_id,
-        #         "images": [
-        #             {
-        #                 "src": self.image
-        #             }
-        #         ],
-        #         "product_type": self.product_type,
-        #         "published_at": None,
-        #         "published_scope": None,
-        #         "tags": self.tags,
-        #         # "template_suffix": "product",
-        #         "title": self.name,
-        #         "updated_at": None,
-        #         "variants": [
-        #             {
-        #                 "barcode": self.barcode,
-        #                 "compare_at_price": 1500,
-        #                 "created_at": None,
-        #                 "fulfillment_service": None,
-        #                 "grams": 550,
-        #                 "id": 1040046883,
-        #                 "inventory_management": "haravan",
-        #                 "inventory_policy": "deny",
-        #                 "inventory_quantity": 0,
-        #                 "old_inventory_quantity": 0,
-        #                 "inventory_quantity_adjustment": None,
-        #                 "position": 1,
-        #                 "price": 100,
-        #                 "product_id": self.seller_product_id,
-        #                 "requires_shipping": False,
-        #                 "sku": "sku123",
-        #                 "taxable": False,
-        #                 "title": "Blue / 155",
-        #                 "updated_at": None,
-        #                 "image_id": None,
-        #                 "option1": "Hồng",
-        #                 "option2": "M",
-        #                 "option3": "Default Title",
-        #                 "inventory_advance": None
-        #             },
-        #             # {
-        #             #     "barcode": "qqq",
-        #             #     "compare_at_price": 1500,
-        #             #     "created_at": "2019-05-31T09:12:00.55Z",
-        #             #     "fulfillment_service": null,
-        #             #     "grams": 200,
-        #             #     "id": 1040046884,
-        #             #     "inventory_management": "haravan",
-        #             #     "inventory_policy": "continue",
-        #             #     "inventory_quantity": 0,
-        #             #     "old_inventory_quantity": 0,
-        #             #     "inventory_quantity_adjustment": null,
-        #             #     "position": 2,
-        #             #     "price": 200,
-        #             #     "product_id": 1020104002,
-        #             #     "requires_shipping": true,
-        #             #     "sku": "123",
-        #             #     "taxable": false,
-        #             #     "title": "Black / 159",
-        #             #     "updated_at": "2019-05-31T09:12:00.55Z",
-        #             #     "image_id": null,
-        #             #     "option1": "Black",
-        #             #     "option2": "159",
-        #             #     "option3": null,
-        #             #     "inventory_advance": null
-        #             # }
-        #         ],
-        #         "vendor": self.vendor,
-        #         "options": [
-        #             {
-        #                 "name": "Color",
-        #                 "id": 2448194925,
-        #                 "position": 1,
-        #                 "product_id": self.seller_product_id
-        #             },
-        #             {
-        #                 "name": "Size",
-        #                 "id": 2448194926,
-        #                 "position": 2,
-        #                 "product_id": self.seller_product_id
-        #             },
-        #             {
-        #                 "name": "Title",
-        #                 "id": 2448194927,
-        #                 "position": 3,
-        #                 "product_id": self.seller_product_id
-        #             }
-        #         ],
-        #         "only_hide_from_list": False,
-        #         "not_allow_promotion": False
-        #     }
-        # })
-        # headers = {
-        #     # 'Authorization': 'Bearer ' + current_seller.token_connect
-        #     'Content-Type': 'application/json',
-        #     'Authorization': 'Bearer ' + token_connect
-        # }
-        # response = requests.request("PUT", url, headers=headers, data=payload)
-        # print(response.text)  # check
-        # if response.json()['product']:
-        #     print(response.json()['product'])
-        # else:
-        #     raise ValidationError(_('Update Product Fail in Sync with API Haravan'))
-
-        # except Exception as e:
-        #     print(e)
 
     #### button "save": 2 action(create and cearte api)
     # @api.model
     # def create(self, vals):
     #     res = super(HaravanSellerProduct, self).create(vals)
-    #
     #     #call API creat product vao button save(create)
     #     self.create_products_haravan()
-    #
     #     return res
 
     ###### API DELETE 1 PRODUCT FOLLOW ID
@@ -296,6 +179,7 @@ class HaravanSellerProduct(models.Model):
                 raise ValidationError(_('Sản phẩm không tồn tại'))
         except Exception as e:
             print(e)
+
 
     #############################
     ## USE API PRODUCT "HARAVAN" ON APP "SALES"
@@ -326,17 +210,17 @@ class HaravanSellerProduct(models.Model):
                     # existed_company = self.env['res.company'].search([('name', '=', companies['name'])], limit=1)
                     # val['company_id'] = existed_company_product.id
 
-                    # field của product.template
+                    # field of 'product.template'
                     val['name'] = product['title']
                     # val['type'] = 'product'
                     val['sale_ok'] = True
                     val['purchase_ok'] = False
                     val['description'] = product['body_html']
+                    val['default_code'] = product['id']
                     val['taxes_id'] = None
                     val['is_published'] = True  # field in model Webiste(Shop) pulish product
                     # standard_price
                     # list_price
-                    # default_code   tuong duong sku sanpham bien the (chua xu ly duoc)
                     # barcode
 
                     # field new add (product.template)
