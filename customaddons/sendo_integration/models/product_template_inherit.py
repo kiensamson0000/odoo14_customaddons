@@ -3,9 +3,6 @@ import requests
 import json
 from odoo.exceptions import UserError, ValidationError
 from datetime import *
-from PIL import Image
-import io
-import numpy
 
 
 class ProductTemplateInheritSendo(models.Model):
@@ -13,8 +10,7 @@ class ProductTemplateInheritSendo(models.Model):
 
     sendo_product_id = fields.Integer(stored=True)
     sendo_category_id = fields.Integer()
-    sendo_stock_availability = fields.Boolean(string='Stock Availability', compute='_compute_check_quantity_product',
-                                              default=True, store=True)
+    sendo_stock_availability = fields.Boolean(string='Stock Availability', default=True, store=True)
     sendo_height = fields.Float(string='Height', required=True, default=5)
     sendo_length = fields.Float(string='Length', required=True, default=20)
     sendo_width = fields.Float(string='Width', required=True, default=10)
@@ -31,18 +27,17 @@ class ProductTemplateInheritSendo(models.Model):
     sendo_promotion_from_date = fields.Date(string='Promotion From Date', default=date.today(), store=True)
     sendo_promotion_to_date = fields.Date(string='Promotion To Date', required=True,
                                           default=date.today() + timedelta(days=9000), store=True)
-    sendo_is_promotion = fields.Boolean(string='Promotion', compute='_compute_check_promotion_product', default=True,
-                                        store=True)
+    sendo_is_promotion = fields.Boolean(string='Promotion',  default=True, store=True)
     sendo_special_price = fields.Float(string='Special Price', required=True, default=0.5)
     sendo_url_avatar_image = fields.Char(string='Image URL Product')
-    check_product_sendo = fields.Boolean(compute='_compute_check_product_sendo', store=True)
+    check_product_sendo = fields.Boolean(store=True)
 
-    def _compute_check_product_sendo(self):
-        for rec in self:
-            if rec.sendo_product_id:
-                rec.check_product_sendo = True
-            else:
-                rec.check_product_sendo = False
+    # def _compute_check_product_sendo(self):
+    #     for rec in self:
+    #         if rec.sendo_product_id:
+    #             rec.check_product_sendo = True
+    #         else:
+    #             rec.check_product_sendo = False
 
     @api.constrains('sendo_special_price', 'list_price')
     def check_sendo_special_price(self):
@@ -73,31 +68,6 @@ class ProductTemplateInheritSendo(models.Model):
         for rec in self:
             if rec.sendo_stock_quantity < 0:
                 raise ValidationError(_("Stock Quantity Product need more than 0."))
-
-    def _compute_check_quantity_product(self):
-        for rec in self:
-            if rec.sendo_stock_quantity > 0:
-                rec.sendo_stock_availability = True
-            else:
-                rec.sendo_stock_availability = False
-
-    # @api.depends('sendo_promotion_from_date', 'sendo_promotion_to_date', 'sendo_is_promotion')
-    def _compute_check_promotion_product(self):
-        for rec in self:
-            if rec.sendo_promotion_from_date:
-                if rec.sendo_promotion_to_date:
-                    if rec.sendo_special_price:
-                        rec.sendo_is_promotion = True
-            else:
-                rec.sendo_is_promotion = False
-
-    # @api.model
-    # def create(self, vals_list):
-    #     print()
-    #     res = super(ProductTemplateInheritSendo, self).create(vals_list)
-    #     # Call API Create Or Update Product In Sendo
-    #     self.create_or_update_product_sendo()
-    #     return res
 
     def create_product_sendo(self):
         try:
@@ -221,21 +191,15 @@ class ProductTemplateInheritSendo(models.Model):
 
             response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
-            print(response)
-            if response.json()["error"]:
-                print(response.json()["error"])
-                raise ValidationError(_(response.json()["error"]["message"]))
             if response.json()["success"]:
                 print(response.json())
                 existed_seller_product_sendo = self.env['product.template'].search(
                     [('default_code', '=', self.default_code)], limit=1)
                 existed_seller_product_sendo.sendo_product_id = int(response.json()["result"])
             else:
-                raise ValidationError(_('Create Product Fail in Sync with Sendo.'))
-
+                raise UserError(_(response.json()["error"]["message"]))
         except Exception as e:
-            print(e)
-
+            raise UserError(str(e))
 
     def update_product_sendo(self):
         try:
@@ -244,7 +208,7 @@ class ProductTemplateInheritSendo(models.Model):
             search_cate_sendo = self.env['product.category'].sudo().search(
                 [('id', '=', self.categ_id.id)], limit=1)
 
-            url = "https://open.sendo.vn/api/partner/product" + self.sendo_product_id +""
+            url = "https://open.sendo.vn/api/partner/product"
 
             payload = {
                 "id": self.sendo_product_id,
@@ -358,15 +322,9 @@ class ProductTemplateInheritSendo(models.Model):
             }
 
             response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
-
-            print(response)
-            if response.json()["error"]:
-                print(response.json()["error"])
-                raise ValidationError(_(response.json()["error"]["message"]))
             if response.json()["success"]:
                 print(response.json())
             else:
-                raise ValidationError(_('Update Product Fail in Sync with Sendo.'))
-
+                raise UserError(_(response.json()["error"]["message"]))
         except Exception as e:
-            print(e)
+            raise UserError(str(e))

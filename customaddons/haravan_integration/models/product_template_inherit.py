@@ -10,7 +10,6 @@ class ProductTemplateInherit(models.Model):
     _description = 'Inherit product template'
 
     ##### xoa bo ca field thua da co trong core
-
     haravan_product_id = fields.Char(string='Product ID', store=True)
     haravan_product_type = fields.Char("Product Type")
     haravan_tags = fields.Char("Tag")

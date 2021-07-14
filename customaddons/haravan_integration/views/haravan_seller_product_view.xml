@@ -78,9 +78,5 @@
 
     <menuitem id="haravan_seller_product" name="Product"
               parent="haravan_seller_product_menu" action="haravan_seller_product_view_action"/>
-
-    <menuitem id="connect_shop_wizard" name="Connect Haravan Integration"
-              parent="haravan_integration_root"
-              action="connect_shop_wizard_act_window" sequence="6"/>
     </data>
 </odoo>

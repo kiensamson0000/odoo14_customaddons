@@ -145,7 +145,6 @@ class HaravanSellerProduct(models.Model):
             print(e)
 
     ####UPDATE
-    ####
     ######################
     def update_products_haravan(self):
         pass
@@ -180,7 +179,6 @@ class HaravanSellerProduct(models.Model):
         except Exception as e:
             print(e)
 
-
     #############################
     ## USE API PRODUCT "HARAVAN" ON APP "SALES"
     def get_product_haravan_sale(self):
@@ -205,11 +203,9 @@ class HaravanSellerProduct(models.Model):
                         [('name', '=', product['product_type'])], limit=1)
                     if existed_cate_product:
                         val['categ_id'] = existed_cate_product.id
-
                     ### API get product ko tra ve ten company nen ko the search lay ten company de hien thi nhu categories
                     # existed_company = self.env['res.company'].search([('name', '=', companies['name'])], limit=1)
                     # val['company_id'] = existed_company_product.id
-
                     # field of 'product.template'
                     val['name'] = product['title']
                     # val['type'] = 'product'

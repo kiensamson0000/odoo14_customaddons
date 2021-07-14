@@ -4,56 +4,56 @@
 
         <!-- Cron Module Haravan Integration -->
         <!--        -->
-        <record id="api_haravan_categories_cron" model="ir.cron">
-            <field name="name">####API Categories</field>
-            <field eval="True" name="active"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_categories"/>
-            <field name="state">code</field>
-            <field name="code">model.get_categories_haravan()</field>
-        </record>
+<!--        <record id="api_haravan_categories_cron" model="ir.cron">-->
+<!--            <field name="name">####API Categories</field>-->
+<!--            <field eval="True" name="active"/>-->
+<!--            <field name="user_id" ref="base.user_root"/>-->
+<!--            <field name="interval_number">1</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--            <field name="model_id" ref="model_haravan_categories"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.get_categories_haravan()</field>-->
+<!--        </record>-->
 
-        <record id="api_haravan_collections_cron" model="ir.cron">
-            <field name="name">####API Collections</field>
-            <field eval="True" name="active"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_collections"/>
-            <field name="state">code</field>
-            <field name="code">model.get_collections_haravan()</field>
-        </record>
+<!--        <record id="api_haravan_collections_cron" model="ir.cron">-->
+<!--            <field name="name">####API Collections</field>-->
+<!--            <field eval="True" name="active"/>-->
+<!--            <field name="user_id" ref="base.user_root"/>-->
+<!--            <field name="interval_number">1</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--            <field name="model_id" ref="model_haravan_collections"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.get_collections_haravan()</field>-->
+<!--        </record>-->
 
-        <record id="api_haravan_seller_product_cron" model="ir.cron">
-            <field name="name">####API Products</field>
-            <field eval="True" name="active"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_seller_product"/>
-            <field name="state">code</field>
-            <field name="code">model.get_products_haravan()</field>
-        </record>
+<!--        <record id="api_haravan_seller_product_cron" model="ir.cron">-->
+<!--            <field name="name">####API Products</field>-->
+<!--            <field eval="True" name="active"/>-->
+<!--            <field name="user_id" ref="base.user_root"/>-->
+<!--            <field name="interval_number">1</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--            <field name="model_id" ref="model_haravan_seller_product"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.get_products_haravan()</field>-->
+<!--        </record>-->
 
-        <record id="api_haravan_seller_orders_cron" model="ir.cron">
-            <field name="name">####API Orders</field>
-            <field eval="True" name="active"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_seller_orders"/>
-            <field name="state">code</field>
-            <field name="code">model.get_orders_haravan()</field>
-        </record>
+<!--        <record id="api_haravan_seller_orders_cron" model="ir.cron">-->
+<!--            <field name="name">####API Orders</field>-->
+<!--            <field eval="True" name="active"/>-->
+<!--            <field name="user_id" ref="base.user_root"/>-->
+<!--            <field name="interval_number">1</field>-->
+<!--            <field name="interval_type">days</field>-->
+<!--            <field name="numbercall">-1</field>-->
+<!--            <field name="model_id" ref="model_haravan_seller_orders"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.get_orders_haravan()</field>-->
+<!--        </record>-->
 
 
-        <!-- Cron Module Product Template -->
+        <!-- Cron Module Sales -->
         <!--        -->
         <record id="api_haravan_categories_product_template_cron" model="ir.cron">
             <field name="name">####API Categories - Product Template</field>
@@ -62,7 +62,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_categories"/>
+            <field name="model_id" ref="haravan_integration.model_product_category"/>
             <field name="state">code</field>
             <field name="code">model.get_categories_haravan_sale()</field>
         </record>
@@ -79,16 +79,16 @@
             <field name="code">model.get_companies_haravan_sale()</field>
         </record>
 
-        <record id="api_haravan_partner_product_template_cron" model="ir.cron">
-            <field name="name">####API Partner - Product Template</field>
+        <record id="api_haravan_vendors_product_template_cron" model="ir.cron">
+            <field name="name">####API Vendors - Product Template</field>
             <field eval="True" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_partners"/>
+            <field name="model_id" ref="model_haravan_vendors"/>
             <field name="state">code</field>
-            <field name="code">model.get_partners_haravan_sale()</field>
+            <field name="code">model.get_vendors_haravan_sale()</field>
         </record>
 
         <!--        <record id="api_haravan_collection_product_template_cron" model="ir.cron">-->

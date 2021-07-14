@@ -5,7 +5,6 @@ from datetime import *
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import ValidationError
 
-
 class HaravanSellerOrders(models.Model):
     _name = 'haravan.seller.orders'
     _description = 'API Order Haravan'
@@ -37,103 +36,6 @@ class HaravanSellerOrders(models.Model):
                 raise ValidationError(_("Subtotal Price need more than 0 (>0)."))
 
     #############################
-    ## USE API ORDER ON Module "Haravan Integration"
-    def get_orders_haravan(self):
-        try:
-            # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-            token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-            url = "https://apis.haravan.com/com/orders.json"
-            payload = {}
-            headers = {
-                # 'Authorization': 'Bearer ' + current_seller.token_connect
-                'Authorization': 'Bearer ' + token_connect
-            }
-            response = requests.request("GET", url, headers=headers, data=payload)
-            result_order = response.json()
-            list_orders = result_order['orders']
-            val = {}
-            list_product = []
-            for order in list_orders:
-                if 'id' in order:
-                    val['order_id'] = order['id']
-                    val['name'] = order['billing_address']['name']
-                    val['address1'] = order['billing_address']['address1']
-                    val['email'] = order['email']
-                    val['phone'] = order['billing_address']['phone']
-                    val['created_at'] = order['created_at']
-                    val['source_name'] = order['source_name']
-                    val['subtotal_price'] = order['subtotal_price']
-                    val['financial_status'] = order['financial_status']
-                    val['gateway'] = order['gateway']
-                    # val['tracking_company'] = order['fulfillments']['tracking_company']
-                    val['fulfillment_status'] = order['fulfillment_status']
-                    existed_order = self.env["haravan.seller.orders"].sudo().search([('order_id', '=', order['id'])],
-                                                                                    limit=1)
-                    if not existed_order:
-                        new_record = self.env["haravan.seller.orders"].create(val)
-                        if new_record:
-                            if order['line_items']:
-                                val_product = order['line_items']
-                                for product in val_product:
-                                    if 'id' in product:
-                                        list_product.append({
-                                            'product_id': product['variant_id'],
-                                            'name': product['name'],
-                                            'sku': product['sku'],
-                                            'quantity': product['quantity'],
-                                            'vendor': product['vendor'],
-                                            'price': product['price'],
-                                            'type': product['type']
-                                        })
-                                        if list_product:
-                                            new_record.order_line = [(0, 0, e) for e in list_product]
-                                        list_product = []
-                    else:
-                        existed_order.sudo().write(val)
-                        # existed_order.env['haravan.seller.orders'].sudo().write(val)
-        except Exception as e:
-            print(e)
-
-    ### CREATE
-    ################
-    # def create_orders_haravan(self):
-    #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-    #     infor_product_order = self.env['product.order.haravan'].sudo().search([])[0]
-    #
-    #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-    #     url = "https://apis.haravan.com/com/orders.json"
-    #     # name (check tên của customer đúng format(họ đệm & tên))
-    #     payload = json.dumps({
-    #         "order": {
-    #             "billing_address": {
-    #                 "address1": self.address1,
-    #                 "phone": self.phone,
-    #                 "name": self.name
-    #             },
-    #             "email": self.email,
-    #             "source_name": self.source_name,
-    #             "fulfillment_status": self.fulfillment_status,
-    #             "line_items": [
-    #                 {
-    #                     "variant_id": 44765421323529,
-    #                     "quantity": 1111121
-    #                 }]
-    #         }
-    #     })
-    #     headers = {
-    #         # 'Authorization': 'Bearer ' + current_seller.token_connect
-    #         'Content-Type': 'application/json',
-    #         'Authorization': 'Bearer ' + token_connect
-    #     }
-    #     response = requests.request("POST", url, headers=headers, data=payload)
-    #     print(response.text)  # check
-    #     if response.json()['order']:
-    #         print(response.json()['order'])
-    #         self.order_id = response.json()['order']['id']  # save order_id on database
-    #     else:
-    #         raise ValidationError(_('Create Product Fail in Sync with API Haravan'))
-
-    #############################
     ## USE API ORDER ON APP "SALE"
     def get_orders_haravan_sale(self):
         # try:
@@ -147,48 +49,52 @@ class HaravanSellerOrders(models.Model):
         }
         response = requests.request("GET", url, headers=headers, data=payload)
         result_order = response.json()
-        list_orders = [result_order['orders'][2]]
-        # list_orders = result_order['orders']
+        # list_orders = [result_order['orders'][7]]
+        list_orders = result_order["orders"]
         val = {}
         list_product = []
         val_customer = {}
         for order in list_orders:
             try:
                 if 'id' in order:
-                    # get information customer = api order
+                    ## get infor customer
                     # val_customer['parent_id'] = order['billing_address']['id']
                     val_customer['name'] = order['billing_address']['name']
                     val_customer['street'] = order['billing_address']['address1']
+                    # val_customer['street2'] = order['billing_address']['address2']  # address2 thg = null
                     val_customer['email'] = order['email']
                     val_customer['phone'] = order['billing_address']['phone']
+                    val_customer['mobile'] = order['billing_address']['phone']
+                    val_customer['type'] = 'contact'
+                    val_customer['check_partner_haravan'] = True
+                    # val_customer['comment'] = 'Sync By Call Sendo API'
+                    # val_customer['company_type'] = 'person'
                     # val_customer['tags'] = order['tags']
                     existsed_customer = self.env['res.partner'].sudo().search(
                         ['&', ('phone', '=', order['billing_address']['phone']),
                          ('street', '=', order['billing_address']['address1'])], limit=1)
                     if not existsed_customer:
                         self.env['res.partner'].sudo().create(val_customer)
-                        ## get information order
-                        # field existed (sale.order)
-                        val['amount_total'] = order['subtotal_price']
-                        val['name'] = order['id']
-                        # val['amount_untaxed'] = order['sub_total']
-                        ### val['date_order'] = datetime.fromtimestamp(order['created_at'])
-                        val['partner_id'] = existsed_customer.id
-                        # val['tracking_company'] = order['fulfillments']['tracking_company']
-                        # new add field (sale.order)
+                        ## get infor order
                         val['haravan_order_id'] = order['id']
+                        val['name'] = order['id']
                         val['haravan_source_name'] = order['source_name']
-                        val['haravan_financial_status'] = order['financial_status']
+                        val['haravan_carrier_status_code'] = order['fulfillments']['carrier_status_code']
                         val['haravan_gateway'] = order['gateway']
-                        val['haravan_fulfillment_status'] = order['fulfillment_status']
+                        val['haravan_carrier_cod_status_code'] = order['fulfillments']['carrier_cod_status_code']
+                        val['amount_total'] = order['subtotal_price']
+                        val['date_order'] = datetime.fromtimestamp(order['created_at'])
+                        val['partner_id'] = existsed_customer.id
+                        # val['amount_untaxed'] = order['sub_total']
                         existed_order = self.env['sale.order'].sudo().search([('haravan_order_id', '=', order['id'])],
                                                                              limit=1)
                         if not existed_order:
                             new_record = self.env['sale.order'].create(val)
                             if new_record:
-                                if order['line_items']:
+                                if 'line_items' in order:
                                     val_product = order['line_items']
                                     for product in val_product:
+                                        # try, catch xử lý trường hợp sản phẩm đã xáo nhg vẫn tồn tại trg 1 đơn hàng
                                         try:
                                             if 'id' in product:
                                                 existed_product_haravan = self.env['product.template'].sudo().search(
@@ -206,29 +112,28 @@ class HaravanSellerOrders(models.Model):
                         else:
                             existed_order.sudo().write(val)
                     else:
-                        self.env['res.partner'].sudo().write(val_customer)
-                        ## get information order
-                        # field existed (sale.order)
+                        existsed_customer.sudo().write(val_customer)
+                        ## get infor order
+                        val['haravan_order_id'] = order['id']
+                        val['name'] = order['id']
+                        val['haravan_source_name'] = order['source_name']
+                        val['haravan_carrier_status_code'] = order['fulfillments']['carrier_status_code']
+                        val['haravan_gateway'] = order['gateway']
+                        val['haravan_carrier_cod_status_code'] = order['fulfillments']['carrier_cod_status_code']
+                        val['amount_total'] = order['subtotal_price']
+                        val['date_order'] = datetime.fromtimestamp(order['created_at'])
+                        val['partner_id'] = existsed_customer.id
+                        # val['amount_untaxed'] = order['sub_total']
                         val['amount_total'] = order['subtotal_price']
                         # val['amount_untaxed'] = order['sub_total']
                         ##### val['date_order'] = datetime.fromtimestamp(order['created_at'])
-                        val['name'] = order['id']
-                        val['partner_id'] = existsed_customer.id
-                        # val['tracking_company'] = order['fulfillments']['tracking_company']
-                        # new add field (sale.order)
-                        val['haravan_order_id'] = order['id']
-                        val['haravan_source_name'] = order['source_name']
-                        val['haravan_financial_status'] = order['financial_status']
-                        val['haravan_gateway'] = order['gateway']
-                        val['haravan_fulfillment_status'] = order['fulfillment_status']
                         # In sale.order khong co field order_id => create new field haravan_order_id
-                        existed_order = self.env['sale.order'].sudo().search(
-                            [('haravan_order_id', '=', str(order['id']))],
-                            limit=1)
+                        existed_order = self.env['sale.order'].sudo().search([('haravan_order_id', '=', order['id'])],
+                                                                             limit=1)
                         if not existed_order:
                             new_record = self.env['sale.order'].create(val)
                             if new_record:
-                                if order['line_items']:
+                                if 'line_items' in order:
                                     val_product = order['line_items']
                                     list_product = []
                                     for product in val_product:
@@ -239,7 +144,7 @@ class HaravanSellerOrders(models.Model):
                                                 list_product.append({
                                                     'product_id': existed_product_haravan.product_variant_id.id,
                                                     'product_uom_qty': product['quantity'],
-                                                    'price_unit': product['price'],
+                                                    'price_unit': product['price']
                                                 })
                                         except Exception as e:
                                             print(e)
@@ -249,7 +154,6 @@ class HaravanSellerOrders(models.Model):
                             existed_order.sudo().write(val)
             except Exception as e:
                 print(e)
-
 
 class ProductOrderHaravan(models.Model):
     _name = "product.order.haravan"

@@ -10,8 +10,7 @@ class HaravanCompanies(models.Model):
     vendors_name = fields.Char()
     id = fields.Char()
 
-    ### Shop hang chính là company(1 Shop)
-    #
+    ### Shop là company(1 Shop)
     def get_companies_haravan_sale(self):
         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'

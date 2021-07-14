@@ -15,7 +15,6 @@ class HaravanCollections(models.Model):
 
     #############################
     ## USE API COLLECTIONS "HARAVAN INTEGRATION" ON Module "Haravan Integration"
-    #############################
     def get_collections_haravan(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)

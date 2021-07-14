@@ -22,15 +22,12 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/haravan_collections_view.xml',
-        'views/haravan_categories_view.xml',
+        'data/api_haravan_cron.xml',
         'views/haravan_seller_product_view.xml',
-        'views/haravan_seller_product_variants_view.xml',
         'views/haravan_seller_view.xml',
-        'views/haravan_seller_order_view.xml',
+        'views/sale_order_inherit_view.xml',
         'views/product_template_inherit_view.xml',
-        'wizard/connect_shop_wizard.xml',
-        'data/api_haravan_cron.xml'
+        'views/res_partner_inherit_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

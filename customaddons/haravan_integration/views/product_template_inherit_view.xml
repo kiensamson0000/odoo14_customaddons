@@ -38,6 +38,12 @@
                     <field name="haravan_image_url"/>
                     <field name="check_product_haravan"/>
                 </xpath>
+
+                <xpath expr="//field[@name='description']" position="attributes">
+                    <!-- Add your fields or attributes here -->
+                    <attribute name="placeholder">Mô tả đầy đủ, chi tiết về sản phẩm bán để khách hàng dễ dàng nắm bắt thông tin. Hướng dẫn sử dụng nếu có.
+                    </attribute>
+                </xpath>
             </field>
         </record>
 
@@ -49,7 +55,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='categ_id']" position="after">
                     <!-- Add your fields or attributes here -->
-                    <filter name="haravan_product_id" string="Haravan Product"
+                    <filter name="haravan_product_id" string="### Haravan Product"
                             domain="[('haravan_product_id', '!=', False)]"/>
                 </xpath>
             </field>

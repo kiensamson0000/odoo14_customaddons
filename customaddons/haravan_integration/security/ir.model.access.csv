@@ -1,12 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_haravan_categories,access_haravan_categories,model_haravan_categories,,1,1,1,1
 access_haravan_companies,access_haravan_companies,model_haravan_companies,,1,1,1,1
-access_haravan_partners,access_haravan_partners,model_haravan_partners,,1,1,1,1
+access_haravan_vendors,access_haravan_vendors,model_haravan_vendors,,1,1,1,1
 access_haravan_collections,access_haravan_collections,model_haravan_collections,,1,1,1,1
 access_haravan_seller,access_haravan_seller,model_haravan_seller,,1,1,1,1
 access_haravan_seller_product,access_haravan_seller_product,model_haravan_seller_product,,1,1,1,1
-access_haravan_seller_product_variants,access_haravan_seller_product_variants,model_haravan_seller_product_variants,,1,1,1,1
 access_haravan_seller_orders,access_haravan_seller_orders,model_haravan_seller_orders,,1,1,1,1
-access_product_order_haravan,access_product_order_haravan,model_product_order_haravan,,1,1,1,1
-access_connect_shop_wizard,access_connect_shop_wizard,model_connect_shop_wizard,,1,1,1,1
 
