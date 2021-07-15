@@ -31,7 +31,6 @@ class HaravanVendors(models.Model):
         if partners:
             for ven in partners:
                 val['name'] = ven
-                val['category_id'] = 'Vendor'
                 val['check_partner_haravan'] = True
                 existed_partner = self.env['res.partner'].search([('name', '=', ven)], limit=1)
                 if not existed_partner:

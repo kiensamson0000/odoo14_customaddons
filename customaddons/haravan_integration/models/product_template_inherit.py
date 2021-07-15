@@ -5,6 +5,7 @@ import re
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class ProductTemplateInherit(models.Model):
     _inherit = 'product.template'
     _description = 'Inherit product template'
@@ -18,8 +19,6 @@ class ProductTemplateInherit(models.Model):
     haravan_updated_at = fields.Char('Updated at')
     check_product_haravan = fields.Boolean()
 
-    ### add 1 field 'quantity'
-    ### add 1 field ma giam gia (khuyen mai)
     def get_product_haravan_sale(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -52,7 +51,7 @@ class ProductTemplateInherit(models.Model):
                     val['haravan_product_type'] = product['product_type']
                     val['default_code'] = product['id']
                     val['haravan_tags'] = product['tags']
-                    val['type'] = 'product'
+                    # val['type'] = 'product'
                     val['taxes_id'] = None
                     val['is_published'] = True  # field in model Webiste(Shop) pulish product
                     # standard_price , # list_price, # barcode
@@ -61,6 +60,7 @@ class ProductTemplateInherit(models.Model):
                     val['haravan_updated_at'] = product['updated_at']
                     val['description'] = re.sub(r'<.*?>', '', product['body_html'])
                     val['check_product_haravan'] = True
+                    val['attribute_line_ids'] = self.prepare_attribute_vals(product)
                     if product['images']:
                         for image in product['images']:
                             if 'id' in image:
@@ -77,35 +77,41 @@ class ProductTemplateInherit(models.Model):
         except Exception as e:
             print(e)
 
-    ### XU LY VARIENT CUA PRODUCT
-    #########
-    # def prepare_attribute_vals(self, result):
-    #     product_attribute_obj = self.env['product.attribute']
-    #     product_attribute_value_obj = self.env['product.attribute.value']
-    #     attrib_line_vals = []
-    #     if 'options' in result:
-    #         for attrib in result.get('options'):
-    #             attrib_name = attrib.get('name')
-    #             attrib_values = attrib.get('values')
-    #             attr_val_ids = []
-    #             attribute = product_attribute_obj.search([('name', '=ilike', attrib_name)], limit=1)
-    #             if not attribute:
-    #                 attribute = product_attribute_obj.create({'name': attrib_name})
-    #             for attrib_vals in attrib_values:
-    #                 attrib_value = attribute.value_ids.filtered(lambda x: x.name == attrib_vals)
-    #                 if attrib_value:
-    #                     attr_val_ids.append(attrib_value[0].id)
-    #                 else:
-    #                     attrib_value = product_attribute_value_obj.with_context(active_id=False).create(
-    #                         {'attribute_id': attribute.id, 'name': attrib_vals})
-    #                     attr_val_ids.append(attrib_value.id)
-    #             if attr_val_ids:
-    #                 attribute_line_ids_data = [0, 0,
-    #                                            {'attribute_id': attribute.id, 'value_ids': [[6, 0, attr_val_ids]]}]
-    #                 attrib_line_vals.append(attribute_line_ids_data)
-    #     return attrib_line_vals
+    ### VARIENTS_PRODUCT
+    def prepare_attribute_vals(self, result):
+        product_attribute_obj = self.env['product.attribute']
+        product_attribute_value_obj = self.env['product.attribute.value']
+        attrib_line_vals = []
+        if 'options' in result:
+            for attrib in result.get('options'):
+                attrib_name = attrib.get('name')
+                attr_val_ids = []
+                attribute = product_attribute_obj.search([('name', '=ilike', attrib_name)], limit=1)
+                if not attribute:
+                    attribute = product_attribute_obj.create({'name': attrib_name})
+                attrib_index = attrib.get('position')
+                attrib_values = []
+                if 'variants' in result and result['variants']:
+                    index = 'option' + str(attrib_index)
+                    for var in result['variants']:
+                        if index in var:
+                            attrib_values.append(var[index])
+                if attrib_values:
+                    for attrib_vals in attrib_values:
+                        attrib_value = attribute.value_ids.filtered(lambda x: x.name == attrib_vals)
+                        if attrib_value:
+                            attr_val_ids.append(attrib_value[0].id)
+                        else:
+                            attrib_value = product_attribute_value_obj.with_context(active_id=False).create(
+                                {'attribute_id': attribute.id, 'name': attrib_vals})
+                            attr_val_ids.append(attrib_value.id)
+                    if attr_val_ids:
+                        attribute_line_ids_data = [0, 0,
+                                                   {'attribute_id': attribute.id, 'value_ids': [[6, 0, attr_val_ids]]}]
+                        attrib_line_vals.append(attribute_line_ids_data)
+        return attrib_line_vals
 
-    ### chua xu ly variant cua product
+    ### chua xu ly variant_product
     def create_products_sales(self):
         try:
             # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
@@ -171,7 +177,8 @@ class ProductTemplateInherit(models.Model):
                 existed_product_haravan = self.env['product.template'].search(
                     [('default_code', '=', self.default_code)], limit=1)
                 existed_product_haravan.check_product_haravan = True
-                existed_product_haravan.haravan_product_id = response.json()['product']['id']  # chu y ep kieu neu kieu dlu
+                existed_product_haravan.haravan_product_id = response.json()['product'][
+                    'id']  # chu y ep kieu neu kieu dlu
             else:
                 raise ValidationError(_('Create Product Fail in Sync with API Haravan'))
         except Exception as e:

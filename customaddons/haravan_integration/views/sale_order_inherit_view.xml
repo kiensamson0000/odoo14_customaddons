@@ -7,12 +7,12 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <!--                <header>-->
-                <!--                    <field name="haravan_order_status" widget="statusbar"-->
-                <!--                           attrs="{'invisible': [('haravan_order_number', '=', False)]}"/>-->
-                <!--                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"-->
-                <!--                           attrs="{'invisible': [('haravan_order_number', '!=', False)]}"/>-->
-                <!--                </header>-->
+                <header>
+                    <field name="haravan_carrier_status_code" widget="statusbar"
+                           attrs="{'invisible': [('haravan_order_id', '=', False)]}"/>
+<!--                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"-->
+<!--                           attrs="{'invisible': [('haravan_order_id', '!=', False)]}"/>-->
+                </header>
                 <!--                <xpath expr="//field[@name='state']" position="attributes">-->
                 <!--                    &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
                 <!--                    <attribute name="invisible">1</attribute>-->

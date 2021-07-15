@@ -122,7 +122,7 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="model_id" ref="model_haravan_seller_orders"/>
+            <field name="model_id" ref="model_sale_order"/>
             <field name="state">code</field>
             <field name="code">model.get_orders_haravan_sale()</field>
         </record>
