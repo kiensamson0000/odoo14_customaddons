@@ -15,11 +15,11 @@
                     <button name="update_products_haravan_sales" string="Update Haravan Products" class="oe_highlight"
                             type="object"
                             confirm="Are you sure with your choice?"
-                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>
+                            attrs="{'invisible':[('check_product_haravan', '=', False)]}"/>
                     <button name="delete_products_haravan_sales" string="Delete Haravan Products" class="oe_highlight"
                             type="object"
                             confirm="Are you sure with your choice?"
-                            attrs="{'invisible':[('check_product_haravan', '!=', True)]}"/>
+                            attrs="{'invisible':[('check_product_haravan', '=', False)]}"/>
                 </header>
                 <xpath expr="//field[@name='type']" position="before">
                     <!-- Add your fields or attributes here -->
@@ -35,6 +35,7 @@
 
                 <xpath expr="//field[@name='company_id']" position="after">
                     <!-- Add your fields or attributes here -->
+                    <field name="haravan_vendors"/>
                     <field name="haravan_image_url"/>
                     <field name="check_product_haravan"/>
                 </xpath>

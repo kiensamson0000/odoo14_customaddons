@@ -23,7 +23,6 @@
     'data': [
         'security/ir.model.access.csv',
         'data/api_haravan_cron.xml',
-        'views/haravan_seller_product_view.xml',
         'views/haravan_seller_view.xml',
         'views/sale_order_inherit_view.xml',
         'views/product_template_inherit_view.xml',

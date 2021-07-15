@@ -8,6 +8,11 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <header>
+                    <button name="update_order_status_from_odoo_to_sendo" type="object"
+                            string="Update Order Status Sendo" confirm="Are you sure with your choice?"
+                            class="btn-primary"
+                            attrs="{'invisible':['|', '|', ('sendo_order_number', '!=', '3'), ('sendo_order_number', '!=', '7'), ('sendo_order_number', '!=', '13')]}"
+                    />
                     <field name="sendo_order_status" widget="statusbar"
                            attrs="{'invisible': [('sendo_order_number', '=', False)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"

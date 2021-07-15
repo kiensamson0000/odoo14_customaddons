@@ -52,7 +52,7 @@
 
         <record id="ir_cron_update_list_order_sendo_product_template" model="ir.cron">
             <field name="name">### Update List Order Sendo - Product Template</field>
-            <field name="model_id" ref="sendo_integration.model_sendo_list_order"/>
+            <field name="model_id" ref="sendo_integration.model_sale_order"/>
             <field name="state">code</field>
             <field name="code">model.get_list_order_sendo_to_product_template()</field>
             <field name="interval_number">1</field>
