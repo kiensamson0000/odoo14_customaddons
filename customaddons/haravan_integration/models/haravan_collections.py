@@ -1,7 +1,7 @@
 import requests
 import json
-from odoo import fields, models, api
 
+from odoo import fields, models, api, _
 
 class HaravanCollections(models.Model):
     _name = "haravan.collections"

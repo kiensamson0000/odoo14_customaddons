@@ -5,7 +5,6 @@ import re
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import UserError, ValidationError
 
-
 class ProductTemplateInherit(models.Model):
     _inherit = 'product.template'
     _description = 'Inherit product template'
@@ -314,22 +313,19 @@ class ProductTemplateInherit(models.Model):
 
     ### API DELETE 1 PRODUCT FOLLOW ID
     def delete_products_haravan_sales(self):
-        try:
-            # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-            token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-            url = "https://apis.haravan.com/com/products/" + self.haravan_product_id + ".json"
-            payload = json.dumps({
-                "product": {
-                    "id": self.haravan_product_id
-                }
-            })
-            headers = {
-                # 'Authorization': 'Bearer ' + current_seller.token_connect
-                'Authorization': 'Bearer ' + token_connect
+        # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
+        token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
+        url = "https://apis.haravan.com/com/products/" + self.haravan_product_id + ".json"
+        payload = json.dumps({
+            "product": {
+                "id": self.haravan_product_id
             }
-            response = requests.request("DELETE", url, headers=headers, data=payload)
-            print(response.text)  # CHECK
-            if response.json()['errors']:
-                raise UserError(_(response.json()["errors"]))
-        except Exception as e:
-            raise UserError(str(e))
+        })
+        headers = {
+            # 'Authorization': 'Bearer ' + current_seller.token_connect
+            'Authorization': 'Bearer ' + token_connect
+        }
+        response = requests.request("DELETE", url, headers=headers, data=payload)
+        print(response.text)  # CHECK
+        if response.json()['errors']:
+            raise UserError(_(response.json()["errors"]))

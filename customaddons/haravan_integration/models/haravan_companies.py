@@ -1,7 +1,7 @@
 import requests
 import json
-from odoo import fields, models, api
 
+from odoo import fields, models, api
 
 class HaravanCompanies(models.Model):
     _name = "haravan.companies"
@@ -43,5 +43,3 @@ class HaravanCompanies(models.Model):
                 self.env['res.company'].sudo().create(val)
             else:
                 existed_company.write(val)
-
-

@@ -3,11 +3,14 @@ import json
 
 from odoo import fields, models, api
 
+
 class ResPartnerInherit(models.Model):
     _inherit = "res.partner"
     _description = "Inherit res.partner"
 
+    haravan_customer_id = fields.Char('ID Customer')
     check_partner_haravan = fields.Boolean(default=False)
+
 
 class HaravanVendors(models.Model):
     _name = "haravan.vendors"

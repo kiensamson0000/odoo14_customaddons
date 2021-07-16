@@ -4,7 +4,6 @@ import json
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 
-
 class ProductCategoriesInherit(models.Model):
     _inherit = "product.category"
     _description = "Inherit product category"

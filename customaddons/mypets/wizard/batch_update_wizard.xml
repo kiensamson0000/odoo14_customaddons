@@ -16,7 +16,6 @@
                             <field name="owner_id"/>
                             <field name="basic_price"/>
                         </group>
-                        <group/>
                     </group>
                     <p>
                         Apply updating on the selected record(s)?

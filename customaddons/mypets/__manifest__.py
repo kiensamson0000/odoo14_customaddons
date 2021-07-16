@@ -15,7 +15,7 @@
     ],
     'data': [                        # liên quan đến view, các file xml
         'security/ir.model.access.csv',
-        'wizard/batch_update_wizard.xml',
+        'wizard/update_order_state_view.xml',
         'views/views.xml',                # <-- DECLARE OUR NEW XML FILE
         'views/res_config_settings_views.xml', # add this
         'views/templates.xml',

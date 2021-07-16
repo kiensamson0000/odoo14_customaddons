@@ -8,15 +8,21 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <header>
-                    <field name="haravan_carrier_status_code" widget="statusbar"
+                    <button name="action_return_information_sendo_order" type="object"
+                            string="Update Order Status Haravan"
+                            class="btn-primary"/>
+                    <!--                    <button name="update_cancelled_status_haravan_sales" type="object"-->
+                    <!--                            string="Cancel Order Status Haravan" confirm="Are you sure with your choice?"-->
+                    <!--                            class="btn-primary"/>-->
+                    <!--                    attrs="{'invisible':['|', '|', ('sendo_order_number', '!=', '3'), ('sendo_order_number', '!=', '7'), ('sendo_order_number', '!=', '13')]}"&ndash;&gt;-->
+                    <field name="haravan_fulfillment_status" widget="statusbar"
                            attrs="{'invisible': [('haravan_order_id', '=', False)]}"/>
-<!--                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"-->
-<!--                           attrs="{'invisible': [('haravan_order_id', '!=', False)]}"/>-->
                 </header>
-                <!--                <xpath expr="//field[@name='state']" position="attributes">-->
-                <!--                    &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
-                <!--                    <attribute name="invisible">1</attribute>-->
-                <!--                </xpath>-->
+
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <!-- Add your fields or attributes here -->
+                    <attribute name="attrs">{'invisible': [('haravan_order_id', '!=', False)]}</attribute>
+                </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <!-- Add your fields or attributes here -->
@@ -25,13 +31,8 @@
 
                 <xpath expr="//field[@name='payment_term_id']" position="after">
                     <!-- Add your fields or attributes here -->
-                    <!-- <field name="haravan_payment_status"/>-->
-                    <!-- <field name="haravan_payment_method"/>-->
-                    <!-- <field name="haravan_fulfillment_status"/>-->
-                    <!-- <field name="haravan_financial_status"/>-->
-                    <field name="haravan_carrier_status_code"/>
                     <field name="haravan_gateway"/>
-                    <field name="haravan_carrier_cod_status_code"/>
+                    <field name="haravan_financial_status"/>
                     <field name="haravan_source_name"/>
                 </xpath>
             </field>
