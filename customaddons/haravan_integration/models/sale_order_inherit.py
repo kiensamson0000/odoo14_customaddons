@@ -16,7 +16,9 @@ class SaleOrderInherit(models.Model):
     haravan_fulfillment_status = fields.Selection([
         ('notfulfilled', 'Chưa hoàn thành'),
         ('partial', 'Hoàn thành một phần'),
-        ('fulfilled', 'Đã hoàn thành')
+        ('fulfilled', 'Đã hoàn thành'),
+        ('approved', 'Đã xác nhận'),
+        ('voided','Đã hủy')
     ], string='Fulfillment status')  # trạng thái tạo vận đơn
     haravan_financial_status = fields.Selection([
         ('pending', 'Chưa thanh toán'),
@@ -270,64 +272,3 @@ class SaleOrderInherit(models.Model):
     #     }
     #     response = requests.request("POST", url, headers=headers, data=payload)
     #     print(response.text)  # check
-
-    # ### API cập nhật trạng thái xác nhận đơn hàng
-    # def update_confirmed_status_haravan_sales(self):
-    #     try:
-    #         # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-    #         token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-    #         url = "https://apis.haravan.com/com/orders/" + self.haravan_order_id + "/confirm.json"
-    #         payload = json.dumps({
-    #             "order": {
-    #                 "id": self.haravan_order_id
-    #             }
-    #         })
-    #         headers = {
-    #             # 'Authorization': 'Bearer ' + current_seller.token_connect
-    #             'Authorization': 'Bearer ' + token_connect
-    #         }
-    #         response = requests.request("POST", url, headers=headers, data=payload)
-    #         print(response.text)  # CHECK
-    #         if "errors" in response.json():
-    #             raise UserError(_(response.json()["errors"]))
-    #     except Exception as e:
-    #         raise UserError(str(e))
-    #
-    # ### API cập nhật trạng thái hủy đơn hàng
-    # def update_cancelled_status_haravan_sales(self):
-    #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-    #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-    #     url = "https://apis.haravan.com/com/orders/" + self.haravan_order_id + "/cancel.json"
-    #     payload = json.dumps({
-    #         "order": {
-    #             "cancel_reason": "other",
-    #             "id": self.haravan_order_id
-    #         }
-    #     })
-    #     headers = {
-    #         # 'Authorization': 'Bearer ' + current_seller.token_connect
-    #         'Content-Type': 'application/json',
-    #         'Authorization': 'Bearer ' + token_connect
-    #     }
-    #     response = requests.request("POST", url, headers=headers, data=payload)
-    #     print(response.text)  # CHECK
-    # if "errors" in response.json():
-    #     raise UserError(_(response.json()["errors"]))
-
-    #     def update_fulfillment_status_order_haravan_sale(self):
-    #     # try:
-    #     # current_seller = self.env['haravan.seller'].sudo().search([])[0]    (chua connect duoc)
-    #     list_orders_haravan = self.env['sale.order'].sudo().search([('haravan_order_id', '=', haravan_order_id)])
-    #     token_connect = '914CE4F424C6DCD6EC3E50792E040C11348E8E27E5C73B5E8A2BB9F3C9690FFB'
-    #     url = "https://apis.haravan.com/com/orders.json"
-    #     payload = {}
-    #     headers = {
-    #         # 'Authorization': 'Bearer ' + current_seller.token_connect
-    #         'Authorization': 'Bearer ' + token_connect
-    #     }
-    #     response = requests.request("POST", url, headers=headers, data=payload)
-    #     result_order = response.json()
-    #     # list_orders = [result_order['orders'][5]]
-    #     list_orders = result_order["orders"]
-    #     val = {}
-    #     val_customer = {}

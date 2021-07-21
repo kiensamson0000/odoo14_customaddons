@@ -5,6 +5,12 @@ from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
 
 
+class ResPartnerInherit(models.Model):
+    _inherit = 'res.partner'
+
+    check_sendo_customer = fields.Boolean(store=True)
+
+
 #       Class Inherit Sale Order
 class ApiSendoSaleOrderInherit(models.Model):
     _inherit = "sale.order"
@@ -41,6 +47,19 @@ class ApiSendoSaleOrderInherit(models.Model):
         ('2', 'Thanh toán trực tuyến'),
         ('4', 'Thanh toán kết hợp'),
         ('5', 'Thanh toán trả sau')], string='Payment Method')
+    sendo_cancel_name = fields.Char(string='Cancel Reason')
+
+    def action_return_information_sendo_order(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'My Company',
+            'view_mode': 'form',
+            'res_model': 'sendo.cancel.reason.wizard',
+            'target': 'new',
+            'context': {
+                'default_sale_order_sendo_cancel_reason_id': self.id,
+            }
+        }
 
     #       Sync Database for Sendo Order to Sale Order
     def get_list_order_sendo_to_product_template(self):
@@ -98,7 +117,7 @@ class ApiSendoSaleOrderInherit(models.Model):
                         val_customer['type'] = 'contact'
                         val_customer['street'] = val_order['receiver_full_address']
                         val_customer['comment'] = 'Sync By Call Sendo API'
-                        val_customer['chech_sendo_customer'] = True
+                        val_customer['check_sendo_customer'] = True
 
                         #   Check Customer
                         existed_customer = self.env['res.partner'].sudo().search(
@@ -131,15 +150,16 @@ class ApiSendoSaleOrderInherit(models.Model):
                                         val_product = rec['sku_details']
                                         for product in val_product:
                                             existed_product_sendo = self.env['product.template'].sudo().search(
-                                                [('default_code', '=', product['sku'])], limit=1)
-                                            list_product.append({
-                                                'product_id': existed_product_sendo.product_variant_id.id,
-                                                'product_uom_qty': product['quantity'],
-                                                'price_unit': product['price']
-                                            })
-                                            if list_product:
-                                                new_record.order_line = [(0, 0, e) for e in list_product]
-                                            list_product = []
+                                                [('sendo_product_id', '=', product['product_variant_id'])], limit=1)
+                                            if existed_product_sendo:
+                                                list_product.append({
+                                                    'product_id': existed_product_sendo.product_variant_id.id,
+                                                    'product_uom_qty': product['quantity'],
+                                                    'price_unit': product['price']
+                                                })
+                                                if list_product:
+                                                    new_record.order_line = [(0, 0, e) for e in list_product]
+                                                list_product = []
                             else:
                                 existed_order.sudo().write(val)
                         else:
@@ -153,7 +173,7 @@ class ApiSendoSaleOrderInherit(models.Model):
                             val['amount_untaxed'] = val_order['sub_total']
                             val['date_order'] = datetime.fromtimestamp(val_order['order_date_time_stamp'])
                             val['partner_id'] = existed_customer.id
-                            val_customer['chech_sendo_customer'] = True
+                            val_customer['check_sendo_customer'] = True
 
                             #   Check Order In Database
                             existed_order = self.env['sale.order'].sudo().search(
@@ -165,48 +185,64 @@ class ApiSendoSaleOrderInherit(models.Model):
                                         val_product = rec['sku_details']
                                         for product in val_product:
                                             existed_product_sendo = self.env['product.template'].sudo().search(
-                                                [('default_code', '=', product['sku'])], limit=1)
-                                            list_product.append({
-                                                'product_id': existed_product_sendo.product_variant_id.id,
-                                                'product_uom_qty': product['quantity'],
-                                                'price_unit': product['price']
-                                            })
-                                            if list_product:
-                                                new_record.order_line = [(0, 0, e) for e in list_product]
-                                            list_product = []
+                                                [('sendo_product_id', '=', product['product_variant_id'])], limit=1)
+                                            if existed_product_sendo:
+                                                list_product.append({
+                                                    'product_id': existed_product_sendo.product_variant_id.id,
+                                                    'product_uom_qty': product['quantity'],
+                                                    'price_unit': product['price']
+                                                })
+                                                if list_product:
+                                                    new_record.order_line = [(0, 0, e) for e in list_product]
+                                                list_product = []
                             else:
                                 existed_order.sudo().write(val)
 
             else:
                 raise ValidationError(_('Sync List Order From Sendo Fail.'))
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))
 
-        #   Update Status Order From Odoo to Sendo
 
-    def update_order_status_from_odoo_to_sendo(self):
+class SendoCancelReason(models.Model):
+    _name = "sendo.cancel.reason"
+    _description = "Sendo Cancel Reason Queue"
+    _rec_name = 'sendo_cancel_name'
+
+    sendo_cancel_code = fields.Char(string='Code')
+    sendo_cancel_name = fields.Char(string='Name')
+
+    #   Get Cancel Reason Collection
+
+    def get_cancel_reason_collection(self):
         try:
             current_seller = self.env['sendo.seller'].sudo().search([])[0]
-            url = "https://open.sendo.vn/api/partner/salesorder"
+            url = "https://open.sendo.vn/api/partner/salesorder/reason-collection"
 
-            payload = json.dumps({
-                "order_number": self.sendo_order_number,
-                "order_status": self.sendo_order_status,
-                "cancel_order_reason": None
-            })
+            payload = {}
             headers = {
-                'cache-control': 'no-cache',
                 'Authorization': 'Bearer ' + current_seller.token_connection
             }
 
-            response = requests.request("PUT", url, headers=headers, data=payload)
-            update_order_status = response.json()
+            response = requests.request("GET", url, headers=headers, data=payload)
+            result_cancel_sendo = response.json()
 
-            if "exp" in response.json():
+            if "exp" in result_cancel_sendo:
                 raise ValidationError(_('My Token is expired, Please connect Sendo API.'))
-            elif update_order_status["success"]:
-                pass
-            else:
-                raise ValidationError(_(update_order_status['error']['message']))
+            elif result_cancel_sendo["success"]:
+                list_reason = result_cancel_sendo["result"]
+
+                val = {}
+                for reason in list_reason:
+                    if 'code' in reason:
+                        val['sendo_cancel_code'] = reason['code']
+                        val['sendo_cancel_name'] = reason['name']
+                        existed_cancel_sendo = self.env['sendo.cancel.reason'].search(
+                            [('sendo_cancel_code', '=', reason['code'])], limit=1)
+                        if len(existed_cancel_sendo) < 1:
+                            self.env['sendo.cancel.reason'].create(val)
+                        else:
+                            existed_cancel_sendo.write(val)
+
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))

@@ -55,7 +55,7 @@ class SendoSellerProduct(models.Model):
             else:
                 raise ValidationError(_('Sync List Product From Sendo Is Fail.'))
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))
 
     #       Call API For Each Product
     def get_each_product_sendo_to_product_template(self):
@@ -75,7 +75,8 @@ class SendoSellerProduct(models.Model):
                 }
 
                 response = requests.request("GET", url, headers=headers, data=payload)
-                if response.json():
+
+                if "exp" in response.json():
                     raise ValidationError(_('My Token is expired, Please connect Sendo API.'))
                 elif response.json()["success"]:
                     seller_products = response.json()
@@ -114,6 +115,7 @@ class SendoSellerProduct(models.Model):
                         if product['stock_availability']:
                             val['sendo_stock_availability'] = True
                             val['sendo_stock_quantity'] = int(product['stock_quantity'])
+                            # val['qty_available'] = float(product['stock_quantity'])
                         else:
                             val['sendo_stock_availability'] = False
 
@@ -133,24 +135,68 @@ class SendoSellerProduct(models.Model):
                                 val['sendo_promotion_to_date'] = date.today() + timedelta(days=9000)
                         else:
                             val['sendo_is_promotion'] = False
-                        attrib_line_vals = []
-                        if product['is_config_variant'] and product['attributes']:
-                            attrib_line_vals = self.prepare_attribute_vals(product)
-                        if len(attrib_line_vals) > 0:
-                            val['attribute_line_ids'] = attrib_line_vals
-                        # search theo sendo id
+
+                        # Search theo sendo id
                         existed_seller_product = self.env['product.template'].search(
                             [('sendo_product_id', '=', product['id'])], limit=1)
+
                         #   Check Product In Database
                         if len(existed_seller_product) < 1:
                             self.env['product.template'].create(val)
                         else:
+                            # existed_seller_product.sudo().attribute_line_ids = False
+                            existed_seller_product.write(val)
+                else:
+                    raise ValidationError(_('Sync Product From Sendo Is Fail.'))
+        except Exception as e:
+            raise ValidationError(str(e))
+
+    def get_variants_for_product_sendo(self):
+        try:
+            current_seller = self.env['sendo.seller'].sudo().search([])[0]
+
+            list_product_sendo = self.env['sendo.seller.product'].sudo().search([])
+
+            for each_product_sendo in list_product_sendo:
+
+                url = "https://open.sendo.vn/api/partner/product?id=" + each_product_sendo["seller_product_id"]
+
+                payload = ""
+
+                headers = {
+                    'Authorization': 'Bearer ' + current_seller.token_connection
+                }
+
+                response = requests.request("GET", url, headers=headers, data=payload)
+
+                if "exp" in response.json():
+                    raise ValidationError(_('My Token is expired, Please connect Sendo API.'))
+                elif response.json()["success"]:
+                    seller_products = response.json()
+
+                    product = seller_products["result"]
+
+                    val = {}
+                    if 'id' in product:
+                        # search theo sendo id
+                        existed_seller_product = self.env['product.template'].search(
+                            [('sendo_product_id', '=', product['id'])], limit=1)
+                        if len(existed_seller_product) < 1:
+                            pass
+                        else:
+                            #   Add Variant For Product
+                            attrib_line_vals = []
+                            if product['is_config_variant'] and product['attributes']:
+                                attrib_line_vals = self.prepare_attribute_vals(product)
+                            if len(attrib_line_vals) > 0:
+                                val['attribute_line_ids'] = attrib_line_vals
+
                             existed_seller_product.sudo().attribute_line_ids = False
                             existed_seller_product.write(val)
                 else:
                     raise ValidationError(_('Sync Product From Sendo Is Fail.'))
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))
 
     def prepare_attribute_vals(self, result):
         product_attribute_obj = self.env['product.attribute']

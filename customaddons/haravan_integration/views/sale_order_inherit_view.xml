@@ -9,12 +9,15 @@
             <field name="arch" type="xml">
                 <header>
                     <button name="action_return_information_sendo_order" type="object"
-                            string="Update Order Status Haravan"
-                            class="btn-primary"/>
-                    <!--                    <button name="update_cancelled_status_haravan_sales" type="object"-->
-                    <!--                            string="Cancel Order Status Haravan" confirm="Are you sure with your choice?"-->
-                    <!--                            class="btn-primary"/>-->
-                    <!--                    attrs="{'invisible':['|', '|', ('sendo_order_number', '!=', '3'), ('sendo_order_number', '!=', '7'), ('sendo_order_number', '!=', '13')]}"&ndash;&gt;-->
+                            string="Update Order State Haravan"
+                            class="btn-primary"
+                            attrs="{'invisible':['|', '|',('haravan_fulfillment_status', '=', 'fulfilled'), ('haravan_fulfillment_status', '=', 'approved'), ('haravan_fulfillment_status', '=', 'voided')]}"/>
+<!--                    <button name="update_confirmed_status_haravan_sales" type="object"-->
+<!--                            string="Confirm Order Status Haravan" confirm="Are you sure with your choice?"-->
+<!--                            class="btn-primary"/>-->
+<!--                    attrs="{'invisible':['|', '|', ('sendo_order_number', '!=', '3'), ('sendo_order_number', '!=', '7'),-->
+<!--                    ('sendo_order_number', '!=', '13')]}"&ndash;&gt;-->
+
                     <field name="haravan_fulfillment_status" widget="statusbar"
                            attrs="{'invisible': [('haravan_order_id', '=', False)]}"/>
                 </header>

@@ -15,9 +15,9 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string="Confirm Order Status" name="update_confirmed_status_haravan_sales" type="object"
+                        <button string="Confirm Order" name="update_confirmed_status_haravan_sales" type="object"
                                 class="btn-primary"/>
-                        <button string="Cancel Order Status" name="update_cancelled_status_haravan_sales" type="object"
+                        <button string="Cancel Order" name="update_cancelled_status_haravan_sales" type="object"
                                 class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>

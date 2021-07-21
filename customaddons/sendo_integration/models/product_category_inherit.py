@@ -54,7 +54,7 @@ class ApiSendoProductCategoryInherit(models.Model):
                 raise ValidationError(_('Sync Category From Sendo Is Fail.'))
 
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))
 
 
     #       Add To Module Sale
@@ -95,4 +95,4 @@ class ApiSendoProductCategoryInherit(models.Model):
                 else:
                     raise ValidationError(_('Sync Category From Sendo Is Fail.'))
         except Exception as e:
-            print(e)
+            raise ValidationError(str(e))

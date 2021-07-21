@@ -16,7 +16,14 @@ class ProductTemplateInherit(models.Model):
     haravan_image_url = fields.Char(store=True)  # save url image --> hien thi trong view = (widget="image") #1
     haravan_created_at = fields.Char('Created at')
     haravan_updated_at = fields.Char('Updated at')
+    # haravan_inventory_quantity = fields.Integer(string='Inventory Quantity', required=True)
     check_product_haravan = fields.Boolean()
+
+    # @api.constrains('haravan_inventory_quantity')
+    # def check_haravan_inventory_quantity(self):
+    #     for rec in self:
+    #         if rec.haravan_inventory_quantity < 0:
+    #             raise ValidationError(_("Inventory Quantity Product need more than 0."))
 
     def get_product_haravan_sale(self):
         try:
@@ -35,6 +42,7 @@ class ProductTemplateInherit(models.Model):
             for product in list_product:
                 if 'id' in product:
                     ### link ref to categories, company
+                    ### Install app Inventory
                     ### Note: get "category,company" trước nếu không bị error
                     existed_cate_product = self.env['product.category'].search(
                         [('name', '=', product['product_type'])], limit=1)
@@ -50,16 +58,22 @@ class ProductTemplateInherit(models.Model):
                     val['haravan_product_type'] = product['product_type']
                     val['default_code'] = product['id']
                     val['haravan_tags'] = product['tags']
-                    # val['type'] = 'product'
+                    val['type'] = 'product'
                     val['taxes_id'] = None
                     val['is_published'] = True  # field in model Webiste(Shop) pulish product
-                    # standard_price , # list_price, # barcode
+                    # standard_price, # barcode
                     val['haravan_vendors'] = product['vendor']
                     val['haravan_created_at'] = product['created_at']
                     val['haravan_updated_at'] = product['updated_at']
+                    ### list_price: min_price tren web
+                    if product["variants"]:
+                        min_price = product["variants"][0]['price']
+                        for list_price in product["variants"]:
+                            if list_price['price'] <= min_price:
+                                min_price = list_price['price']
+                        val['list_price'] = min_price
                     val['description'] = re.sub(r'<.*?>', '', product['body_html'])
                     val['check_product_haravan'] = True
-                    val['attribute_line_ids'] = self.prepare_attribute_vals(product)
                     if product['images']:
                         for image in product['images']:
                             if 'id' in image:
@@ -67,6 +81,7 @@ class ProductTemplateInherit(models.Model):
                                 # error don't read url image
                                 # reason: url private
                                 # val['image_1920'] = base64.b64encode(urlopen(product["images"][0]["src"]).read())
+                    val['attribute_line_ids'] = self.prepare_attribute_vals(product)
                     existed_product = self.env["product.template"].search([('haravan_product_id', '=', product['id'])],
                                                                           limit=1)
                     if not existed_product:
