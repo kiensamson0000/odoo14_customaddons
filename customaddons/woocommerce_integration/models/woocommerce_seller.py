@@ -27,14 +27,14 @@ class WoocommerceSeller(models.Model):
             'res_id': res_id.id if res_id else False,
         }
 
-    def test_connect(self):
+    def check_connect(self):
         try:
             wcapi = API(
-                url=self.link_website,
-                consumer_key=self.consumer_key,
-                consumer_secret=self.consumer_secret,
-                wp_api=True,
-                version="wc/v3",
+                url = self.link_website,
+                consumer_key = self.consumer_key,
+                consumer_secret = self.consumer_secret,
+                wp_api = True,
+                version = "wc/v3",
                 query_string_auth=True  # Force Basic Authentication as query string true and using under HTTPS
             )
             response = wcapi.get("products/tags").json()

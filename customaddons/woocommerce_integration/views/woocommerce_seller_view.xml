@@ -14,7 +14,7 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button name="test_connect" type="object" class="btn-primary" string="Connect"/>
+                        <button name="check_connect" type="object" class="btn-primary" string="Connect"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>

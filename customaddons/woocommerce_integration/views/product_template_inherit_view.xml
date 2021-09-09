@@ -23,8 +23,19 @@
 
                 <xpath expr="//field[@name='company_id']" position="after">
                     <!-- Add your fields or attributes here -->
-<!--                    <field name="woo_image_url"/>-->
                     <field name="check_product_woo"/>
+                </xpath>
+
+                <xpath expr="//div[@name='weight']" position="after">
+                    <!-- Add your fields or attributes here -->
+                    <field name="woo_height"/>
+                    <field name="woo_length"/>
+                    <field name="woo_width"/>
+                </xpath>
+
+                <xpath expr="//field[@name='weight']" position="attributes">
+                    <!-- Add your fields or attributes here -->
+                    <attribute name="required">1</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='description']" position="attributes">
@@ -32,6 +43,7 @@
                     <attribute name="placeholder">Mô tả đầy đủ, chi tiết về sản phẩm bán để khách hàng dễ dàng nắm bắt thông tin. Hướng dẫn sử dụng nếu có.
                     </attribute>
                 </xpath>
+                
             </field>
         </record>
 
