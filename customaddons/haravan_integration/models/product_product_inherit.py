@@ -66,7 +66,7 @@ class ProductProductInheritharavan(models.Model):
                         val['is_published'] = True
                         val['haravan_product_id'] = product['id']
                         val['haravan_variant_vendors'] = product['vendor']
-                        val['type'] = 'product'
+                        ##### val['type'] = 'product'
                         val['description'] = re.sub(r'<.*?>', '', product['body_html'])
                         if product['images']:
                             for image in product['images']:

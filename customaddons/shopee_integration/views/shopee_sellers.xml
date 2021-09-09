@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <record id="shopee_sellers_action" model="ir.actions.act_window">
+            <field name="name">Sellers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shopee.sellers</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="shopee_sellers" name="Sellers" parent="shopee_base_menu" action="shopee_sellers_action"/>
+
+
+    <!-- Form view -->
+        <record id="shopee_sellers_view_form" model="ir.ui.view">
+            <field name="name">shopee.sellers.view.form</field>
+            <field name="model">shopee.sellers</field>
+            <field name="arch" type="xml">
+                <form string="_form">
+                    <sheet>
+                        <group>
+                            <field name="seller"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+    <!-- Tree(list) view-->
+        <record id="shopee_sellers_view_tree" model="ir.ui.view">
+            <field name="name">shopee.sellers.view.tree</field>
+            <field name="model">shopee.sellers</field>
+            <field name="arch" type="xml">
+                <tree string="_tree">
+                    <field name="seller"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

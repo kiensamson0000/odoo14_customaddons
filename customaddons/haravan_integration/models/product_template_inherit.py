@@ -58,7 +58,7 @@ class ProductTemplateInherit(models.Model):
                     val['haravan_product_type'] = product['product_type']
                     val['default_code'] = product['id']
                     val['haravan_tags'] = product['tags']
-                    val['type'] = 'product'
+                    ##### val['type'] = 'product'
                     val['taxes_id'] = None
                     val['is_published'] = True  # field in model Webiste(Shop) pulish product
                     # standard_price, # barcode

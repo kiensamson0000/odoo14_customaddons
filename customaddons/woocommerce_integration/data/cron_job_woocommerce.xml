@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--            Sync Category to Module Product Template-->
+        <record id="ir_cron_update_category_woo_product_category" model="ir.cron">
+            <field name="name">### Update Category Woocommerce - Product Category</field>
+            <field name="model_id" ref="woocommerce_integration.model_product_category"/>
+            <field name="state">code</field>
+            <field name="code">model.get_categories_woocommerce()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <!--            Sync Product to Module Product Template-->
+        <record id="ir_cron_update_each_product_woo_product_template" model="ir.cron">
+            <field name="name">### Update Each Product Woo - Product Template</field>
+            <field name="model_id" ref="woocommerce_integration.model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">model.get_product_woocommerce()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>
