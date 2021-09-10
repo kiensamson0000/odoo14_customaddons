@@ -62,10 +62,10 @@
                     <field name="sendo_width"/>
                 </xpath>
 
-<!--                <xpath expr="//field[@name='weight']" position="attributes">-->
-<!--                    &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
-<!--                    <attribute name="required">1</attribute>-->
-<!--                </xpath>-->
+                <xpath expr="//field[@name='weight']" position="attributes">
+                    <!-- Add your fields or attributes here -->
+                    <attribute name="required">1</attribute>
+                </xpath>
 
                 <xpath expr="//field[@name='description']" position="attributes">
                     <!-- Add your fields or attributes here -->

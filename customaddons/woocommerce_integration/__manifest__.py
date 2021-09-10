@@ -25,7 +25,9 @@
         'security/ir.model.access.csv',
         'data/cron_job_woocommerce.xml',
         'views/woocommerce_seller_view.xml',
-        'views/product_template_inherit_view.xml'
+        'views/woocommerce_category_view.xml',
+        'views/product_template_inherit_view.xml',
+
     ],
     'installable': True,
     'application': True,

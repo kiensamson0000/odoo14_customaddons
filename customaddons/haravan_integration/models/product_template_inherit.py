@@ -5,6 +5,7 @@ import re
 from odoo import models, fields, api, tools, _
 from odoo.exceptions import UserError, ValidationError
 
+
 class ProductTemplateInherit(models.Model):
     _inherit = 'product.template'
     _description = 'Inherit product template'
@@ -122,7 +123,7 @@ class ProductTemplateInherit(models.Model):
                     if attr_val_ids:
                         attribute_line_ids_data = [0, 0,
                                                    {'attribute_id': attribute.id, 'value_ids': [[6, 0, attr_val_ids]]}]
-                        attrib_line_vals.append(attribute_line_ids_data)
+                    attrib_line_vals.append(attribute_line_ids_data)
         return attrib_line_vals
 
     ### chua xu ly variant_product
