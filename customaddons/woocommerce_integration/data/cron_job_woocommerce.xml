@@ -38,5 +38,17 @@
             <field name="doall" eval="False"/>
         </record>
 
+        <!--            Sync Orders Woocommerce to  sale.order-->
+        <record id="ir_cron_update_list_order_woo_product_template" model="ir.cron">
+            <field name="name">### Get List Order Woocommerce </field>
+            <field name="model_id" ref="woocommerce_integration.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">model.get_list_order_woo()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
     </data>
 </odoo>
