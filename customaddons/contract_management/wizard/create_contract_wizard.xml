@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- View Form Create Plan Wizard-->
+
+<odoo>
+    <record id="create_contract_form" model="ir.ui.view">
+        <field name="name">create.contract.form</field>
+        <field name="model">create.contract.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Appointment">
+                <sheet>
+                    <group>
+                        <group name="plan_contract1">
+                                <field name="contract_id"/>
+                                <field name="contract_number"/>
+                                <field name="infor_contract"/>
+                                <field name="contract_address"/>
+                                <field name="cccd_id"/>
+                                <field name="date_created"/>
+                                <field name="place"/>
+                                <field name="delivery_address"/>
+                            </group>
+                            <group name="plan_contract2">
+                                <field name="contract_type"/>
+                                <field name="contract_sign_date"/>
+                                <field name="signer"/>
+                                <field name="signer_position"/>
+                                <field name="contract_construction_date"/>
+                                <field name="contract_end_date"/>
+                                <field name="category_contract"/>
+                                <field name="progress_contract"/>
+                                <field name="remaining_date"/>
+                                <field name="delivery_date"/>
+                            </group>
+                    </group>
+                </sheet>
+                <p><b>Apply create on the selected record(s) ?</b></p>
+                <footer>
+                    <button name="create_contract" string="Create Contract" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_contract_management_wizard" model="ir.actions.act_window">
+        <field name="name">Create Contract</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.contract.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="create_contract_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

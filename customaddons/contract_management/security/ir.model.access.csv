@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_contract_management,access_contract_management,model_contract_management,,1,1,1,1
+access_create_contract_wizard,access_create_contract_wizard,model_create_contract_wizard,,1,1,1,1
+

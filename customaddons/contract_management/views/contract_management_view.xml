@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="contract_management_tree_view" model="ir.ui.view">
+            <field name="name">contract.management.tree.view</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Management" create="false">
+                    <field name="contract_id"/>
+                    <field name="contract_type"/>
+                    <field name="contract_number"/>
+                    <field name="infor_contract"/>
+                    <field name="contract_sign_date"/>
+                    <field name="customer_id"/>
+                    <field name="order_source"/>
+                    <field name="cccd_id"/>
+                    <field name="date_created"/>
+                    <field name="place"/>
+                    <field name="signer"/>
+                    <field name="signer_position"/>
+                    <field name="contract_address"/>
+                    <field name="contract_construction_date"/>
+                    <field name="delivery_address"/>
+                    <field name="contract_end_date"/>
+                    <field name="category_contract"/>
+                    <field name="progress_contract"/>
+                    <field name="remaining_date"/>
+                    <field name="delivery_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="contract_management_form_view" model="ir.ui.view">
+            <field name="name">contract.management.form.view</field>
+            <field name="model">contract.management</field>
+            <field name="arch" type="xml">
+                <form string="Contract Management" create="false">
+                    <header>
+                        <field name="sent" invisible="1"/>
+                        <button name="confirm_contract" type="object"
+                                string="Confirm contract" class="oe_highlight"
+                                attrs="{'invisible':[('sent','!=',False)]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,processing,completed"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="contract_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group name="plan_contract1">
+                                <field name="contract_id"/>
+                                <field name="contract_number"/>
+                                <field name="infor_contract"/>
+                                <field name="customer_id"/>
+                                <field name="order_source"/>
+                                <field name="contract_address"/>
+                                <field name="contract_id"/>
+                                <field name="cccd_id"/>
+                                <field name="date_created"/>
+                                <field name="place"/>
+                                <field name="delivery_address"/>
+                            </group>
+                            <group name="plan_contract2">
+                                <field name="contract_type"/>
+                                <field name="contract_sign_date"/>
+                                <field name="signer"/>
+                                <field name="signer_position"/>
+                                <field name="contract_construction_date"/>
+                                <field name="contract_end_date"/>
+                                <field name="category_contract"/>
+                                <field name="progress_contract"/>
+                                <field name="remaining_date"/>
+                                <field name="delivery_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
