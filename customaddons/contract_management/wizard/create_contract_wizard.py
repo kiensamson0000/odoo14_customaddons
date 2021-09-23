@@ -1,5 +1,6 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError, ValidationError
+from datetime import *
 
 
 class CreateContractWizard(models.TransientModel):
@@ -15,7 +16,7 @@ class CreateContractWizard(models.TransientModel):
         ('mb98123/hdmb522', 'MB98123/HĐMB522'),
     ], string='Hợp đồng khung', readonly=True, default='stk0123/hdnvs')
     infor_contract = fields.Char('Thông tin hợp đồng')
-    contract_sign_date = fields.Datetime('Ngày ký hợp đồng')
+    contract_sign_date = fields.Date('Ngày ký hợp đồng', default=date.today())
     cccd_id = fields.Char('Số CCCD')
     date_created = fields.Char('Ngày cấp')
     place = fields.Char('Nơi cấp')
@@ -51,6 +52,7 @@ class CreateContractWizard(models.TransientModel):
             'infor_contract': self.infor_contract,
             'contract_sign_date': self.contract_sign_date,
             'customer_id': quotation.partner_id.id,
+            'amount_total': quotation.amount_total,
             'cccd_id': self.cccd_id,
             'date_created': self.date_created,
             'place': self.place,

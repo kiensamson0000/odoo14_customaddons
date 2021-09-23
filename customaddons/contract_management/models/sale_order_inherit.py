@@ -3,17 +3,12 @@ from odoo.exceptions import UserError, ValidationError
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
-    _description = "create contract for customer"
+    _description = "contract for customer"
 
     #add field new
     contract = fields.Many2one("contract.management", string='Contract Management')
 
-    # #get contract
-    # def _get_contract(self):
-    #     contract = self.env['contract.management'].search([('id', '=', id)], limit=1)
-    #     if contract:
-    #         self.contract = contract
-
+    # get contract
     def _get_contract(self):
         contract = self.env['contract.management'].search([('id', '=', id)], limit=1)
         if contract:
@@ -23,6 +18,8 @@ class SaleOrder(models.Model):
         check_money_debt = self.env['res.partner'].search([('id', '=', int(self.partner_id))], limit=1)
         money_debt = check_money_debt.money_debt
         money_order = self.partner_id.check_debt_customer()
+        money_currently = self.amount_total
+        money_order = money_order + money_currently
         if money_order > money_debt:
             raise ValidationError(_(
                 'This quotation can not be confirmed because customer exceeds the debt limit.',

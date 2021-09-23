@@ -1,12 +1,13 @@
 from odoo import _, models, fields, api
 from odoo.exceptions import UserError, ValidationError
+from datetime import *
 
 class ContractManagement(models.Model):
     _name = "contract.management"
     _description = "Contract Management"
     _rec_name = 'order_source'
 
-    contract_id = fields.Char('Mã hợp đồng')
+    contract_id = fields.Char('Mã hợp đồng', required='True', readonly=True, default=lambda self: _('New'))
     contract_type = fields.Selection([
         ('hopdonghthietke', 'Hợp đồng thiết kế'),
         ('hopdongmuaban','Hợp đồng mua bán')
@@ -16,9 +17,7 @@ class ContractManagement(models.Model):
         ('mb98123/hdmb522','MB98123/HĐMB522'),
     ], string='Hợp đồng khung', default='stk0123/hdnvs')
     infor_contract = fields.Char('Thông tin hợp đồng')
-    contract_sign_date = fields.Datetime('Ngày ký hợp đồng')
-    # XU LY LAY TEN THEO DON HANG
-    # name_customer = fields.Char('Tên Khách')
+    contract_sign_date = fields.Date('Ngày ký hợp đồng', default=date.today())
     customer_id = fields.Many2one('res.partner', string='Customer ID', readonly=True, ondelete='cascade')
     cccd_id = fields.Char('Số CCCD')
     date_created = fields.Char('Ngày cấp')
@@ -38,27 +37,31 @@ class ContractManagement(models.Model):
         ('dautu','Đầu tư'),
         ('suachua','Sửa chữa'),
     ], string='Hạng mục hợp đồng', readonly=True, default='dautu')
+    amount_total = fields.Float()
     progress_contract = fields.Char('Tiến độ hợp đồng')
     remaining_date = fields.Char('Ngày còn lại')
     delivery_date = fields.Datetime('Ngày giao hàng')
-    sent = fields.Boolean(string='Sent or not', default=False)
-    edited = fields.Boolean(string='Edited or not', default=False)
     state = fields.Selection([
-        ('draft','NHÁP'),
-        ('pending','CHỜ DUYỆT'),
-        ('confirmed','ĐÃ CHỐT'),
-        ('processing','ĐANG THỰC HIỆN'),
-        ('completed','ĐÃ QUYẾT TOÁN'),
-    ], string='Status', readonly=True, default='draft', tracking=True)
+        ('draft', 'NHÁP'),
+        ('pending', 'CHỜ DUYỆT'),
+        ('confirmed', 'ĐÃ CHỐT'),
+        ('processing', 'ĐANG THỰC HIỆN'),
+        ('completed', 'ĐÃ QUYẾT TOÁN')
+    ], string='Status', readonly=True, default='draft')
+    payments_contract_id = fields.One2many('contract.payments', 'contract_payment_customer', string='Payments Contract')
 
+    ####
     def confirm_contract(self):
-        self.sent = True
         self.state = 'pending'
 
-    ##### test
-    @api.onchange('contract_id', 'contract_type', 'contract_number')
-    def _change_state_when_edited(self):
-        self.state = 'draft'
-        self.sent = False
-        self.edited = True
-
+    ####
+    @api.onchange('payments_contract_id')
+    def check_onchange_payments_contract_id(self):
+        if self.payments_contract_id:
+            total_percent = 0
+            list_percent = self.payments_contract_id.mapped('percent_payment')
+            for percent in list_percent:
+                if percent:
+                    total_percent += percent
+            if total_percent > 100:
+                raise ValidationError('Total Percent Payment Value must be equal to 100')

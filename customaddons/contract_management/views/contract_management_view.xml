@@ -6,7 +6,7 @@
             <field name="model">contract.management</field>
             <field name="arch" type="xml">
                 <tree string="Contract Management" create="false">
-                    <field name="contract_id"/>
+                    <field name="contract_id" readonly="1"/>
                     <field name="contract_type"/>
                     <field name="contract_number"/>
                     <field name="infor_contract"/>
@@ -23,10 +23,11 @@
                     <field name="delivery_address"/>
                     <field name="contract_end_date"/>
                     <field name="category_contract"/>
+                    <field name="amount_total" readonly="1"/>
                     <field name="progress_contract"/>
                     <field name="remaining_date"/>
                     <field name="delivery_date"/>
-                    <field name="state"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -37,12 +38,11 @@
             <field name="arch" type="xml">
                 <form string="Contract Management" create="false">
                     <header>
-                        <field name="sent" invisible="1"/>
                         <button name="confirm_contract" type="object"
-                                string="Confirm contract" class="oe_highlight"
-                                attrs="{'invisible':[('sent','!=',False)]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,processing,completed"/>
-
+                                string="Confirm contract"
+                                states="draft" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" />
+<!--                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,confirmed,processing,completed"/>-->
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -72,13 +72,46 @@
                                 <field name="contract_construction_date"/>
                                 <field name="contract_end_date"/>
                                 <field name="category_contract"/>
+                                <field name="amount_total"/>
                                 <field name="progress_contract"/>
                                 <field name="remaining_date"/>
                                 <field name="delivery_date"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Payments Contract" name="payments_contract">
+                                <field name="payments_contract_id">
+                                    <tree editable="bottom">
+                                        <field name="percent_payment" placeholder="10"/>
+                                        <field name="total_amount" force_save="1"/>
+                                        <field name="date_payment"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <group>
+                                                <field name="percent_payment" placeholder="10"/>
+                                                <field name="total_amount" force_save="1"/>
+                                                <field name="date_payment"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="contract_customer_act_window" model="ir.actions.act_window">
+            <field name="name">Contract Customer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">contract.management</field>
+            <field name="view_mode">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    There is no examples click Create to add new Contract Customer.
+                </p>
             </field>
         </record>
     </data>
