@@ -19,8 +19,12 @@ class ContractPayments(models.Model):
             if not rec.percent_payment in range(0,100):
                 raise ValidationError('Percent Payment Value must (0,100)')
             else:
-                check_percent += rec.percent_payment
-                if check_percent <= 100:
-                    rec.total_amount = rec.percent_payment / 100 * self.contract_payment_customer.amount_total
-                else:
-                    raise ValidationError('Total Percent Payment Value must be equal to 100')
+                ### check dieu kien trong def check_onchange_payments_contract_id(self)
+                rec.total_amount = rec.percent_payment / 100 * self.contract_payment_customer.amount_total
+
+                ###
+                # check_percent += rec.percent_payment
+                # if check_percent <= 100:
+                #     rec.total_amount = rec.percent_payment / 100 * self.contract_payment_customer.amount_total
+                # else:
+                #     raise ValidationError('Total Percent Payment Value must be equal to 100')
