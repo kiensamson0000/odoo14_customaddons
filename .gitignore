@@ -61,4 +61,6 @@ setup.py
 download_youtube.py
 enterpriseaddons/
 venv/
+customaddons/shopify_app_son
+customaddons/shopify_app_duc
 

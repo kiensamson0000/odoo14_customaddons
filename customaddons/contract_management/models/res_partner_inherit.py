@@ -20,16 +20,18 @@ class ResPartnerInherit(models.Model):
                     money_debit += - invoice_line.amount_total + invoice_line.amount_residual
                 else:
                     pass
-
+            # Xu ly truong hop hoan tra
+            # 2 case: hoan tra khi da thanh toan & hoan tra chua thanh_toan/thanh_toan 1 phan
+            #
             # elif invoice_line.move_type == 'out_refund':
             #     if invoice_line.payment_state in ('partial', 'in_payment', 'paid'):
+                      # Da xu ly truong hop neu thanh toan đủ
             #         # test = invoice_line.amount_residual
             #         # money_debit = money_debit - invoice_line.amount_residual
             #
-            #         # xu ly khi chua thanh toan ma da hoan tra
-            #         # khong duoc tinh vao tong tien no
-            #         if invoice_line.move_type == 'out_invoice' and invoice_line.payment_state == 'not_paid':
-            #             money_debit = money_debit
+            #         # Chua xu ly hoan tra chua thanh_toan/thanh_toan 1 phan
+            #         if invoice_line.move_type == 'out_invoice' and invoice_line.payment_state == 'reversed':
+            #             money_debit += - invoice_line.amount_total
             #         else:
             #             money_debit = money_debit - invoice_line.amount_residual
             #         # invoice_payments_widget
