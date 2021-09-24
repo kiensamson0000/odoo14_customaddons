@@ -8,15 +8,8 @@
             <form string="_form">
                 <sheet>
                     <group>
-                      <group>
-                        <field name="sp_api_key"/>
-                        <field name="sp_secret_key"/>
-                      </group>
-
-                      <group>
-                        <field name="sp_api_version"/>
-                        <field name="sp_app_name"/>
-                      </group>
+                        <field name="sp_app"/>
+                        <field name="sp_shop"/>
                     </group>
                 </sheet>
             </form>
@@ -28,10 +21,8 @@
         <field name="model">s.sp.app</field>
         <field name="arch" type="xml">
             <tree string="_tree">
-                <field name="sp_api_key"/>
-                <field name="sp_secret_key"/>
-                <field name="sp_api_version"/>
-                <field name="sp_app_name"/>
+                <field name="sp_app"/>
+                <field name="sp_shop"/>
             </tree>
         </field>
     </record>
