@@ -1,6 +1,5 @@
 <odoo>
   <data>
-
     <record id="s_app_view_form" model="ir.ui.view">
         <field name="name">s.app.view.form</field>
         <field name="model">s.app</field>
@@ -12,7 +11,6 @@
                         <field name="s_api_key"/>
                         <field name="s_secret_key"/>
                       </group>
-
                       <group>
                         <field name="s_api_version"/>
                         <field name="s_app_name"/>
@@ -44,19 +42,11 @@
     </record>
 
     <!-- Top menu item -->
-    <menuitem name="Shopify integration" id="shopify_integration.menu_root" action="s_app_action"/>
+    <menuitem name="Shopify integration" id="shopify_integration.menu_root" action="s_app_action"
+              web_icon="shopify_integration,static/description/icon.png"/>
 
-    <!-- menu categories -->
-
+    <!-- menu actions -->
     <menuitem name="Shopify App" id="shopify_integration.menu_1" parent="shopify_integration.menu_root"
               action="s_app_action"/>
-
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="shopify_integration.menu_1_list" parent="shopify_integration.menu_1"
-              action="shopify_integration.action_window"/>
-    <menuitem name="Server to list" id="shopify_integration" parent="shopify_integration.menu_2"
-              action="shopify_integration.action_server"/>
--->
   </data>
 </odoo>
