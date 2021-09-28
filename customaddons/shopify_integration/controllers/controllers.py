@@ -123,7 +123,6 @@ class ShopifyApp(http.Controller):
                     'name': product.title,
                     'lst_price': product.variants[0].price,
                     'variant_id': product.variants[0].id,
-                    # 'image_1920': product.images[0].src,
                     'image_1920': base64.b64encode(urlopen(product.images[0].src).read()),
                     'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id
                 }
@@ -137,17 +136,31 @@ class ShopifyApp(http.Controller):
             print(password_login.shop_password)
             #
             # todo: insert script theme
-
-
+            script_src = "https://odoo.website/shopify_integration/static/src/js/shop_script.js"
+            existedScriptTags = shopify.ScriptTag.find(src=script_src)
+            if not existedScriptTags:
+                shopify.ScriptTag.create({
+                    "event": "onload",
+                    "src": script_src
+                })
+            else:
+                shopify.ScriptTag.write({
+                    "event": "onload",
+                    "src": script_src
+                })
+                # scriptTag = shopify.ScriptTag.create({
+                #     "event": "onload",
+                #     "src": script_src
+                # })
             redirect_link = 'https://odoo.website/web#id=' + password_login.id.__str__() + '&action=301&model=shopify.shop&view_type=form&cids=1&menu_id=213'
             return werkzeug.utils.redirect(redirect_link, 301)
 
     @http.route('/shopify_data/fetch_product/<string:product_id>/<string:vendor>/<string:shop>', auth='public',
                 type='json', cors='*', csrf=False)
     def odoo_fetch_product(self, product_id, vendor, shop, **kw):
-        shopify_product = request.env['product.template'].search(['pro_id', '=', product_id])
-        shop_id = request.env['s.shop'].search(['shop_base_url', '=', shop])
-        discount_product = request.env['s.discount.program'].search(['shop_id', '=', shop_id.id])
+        shopify_product = request.env['product.template'].search([('pro_id', '=', product_id)])
+        shop_id = request.env['s.shop'].search([('shop_base_url', '=', shop)])
+        discount_product = request.env['s.discount.program'].search([('shop_id', '=', shop_id.id)])
         discount_pro = 0
         for discount in discount_product.product_ids:
             if discount.product_id.id == shopify_product.id:
@@ -162,5 +175,44 @@ class ShopifyApp(http.Controller):
             'shop': shop,
         }
 
+    @http.route('/shopify_data/fetch_variant/<string:variant_id>/<string:shop>', auth='public',
+                type='json', cors='*', csrf=False)
+    def odoo_fetch_variant(self, variant_id, shop, *kwargs):
+        variant = variant_id.split(',')
+        pro_list = []
+        pro_list_name = []
+        for var in variant[:-1]:
+            sp_product = request.env['product.template'].sudo().search([('variant_id', '=', var)])
+            pro_list.append(sp_product.id)
+            pro_list_name.append(sp_product.name)
 
+        shop_id = request.env['s.shop'].sudo().search([('shop_base_url', '=', shop)])
+        discount_product = request.env['s.discount.program'].sudo().search([('shop_id', '=', shop_id.id)])
+        discount = 0
 
+        dict_discount_product = {}
+        discount_product_list = []
+        for discount_pro in discount_product:
+            discount_name = discount_pro.name
+            discount_product_list.append(discount_pro.name)
+            dict_discount_product[discount_name] = {}
+            for pro in discount_pro.product_ids:
+                if pro.product_id.id in pro_list:
+                    dict_discount_product[discount_name][pro.name] = pro.discount_amount
+
+        dict_discount = {}
+        for pro in pro_list_name:
+            price_list = []
+            for dis in discount_product_list:
+                price_list.append(dict_discount_product[dis][pro])
+            price_max = max(price_list)
+            for dis in discount_product_list:
+                if (price_max > 0) & (dict_discount_product[dis][pro] == price_max):
+                    dict_discount[pro] = {'Discount Name': dis, 'Discount Amount': price_max}
+                    discount += price_max
+                    break
+
+        return {
+            'discount': dict_discount,
+            'total': discount
+        }

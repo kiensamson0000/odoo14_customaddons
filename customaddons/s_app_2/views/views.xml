@@ -4,7 +4,7 @@
 
 <!--        <template id="gwt_blog_ajax" inherit_id="shopify_config_user_action" name="get_blog_ajax">-->
 <!--            <xpath expr="." position="inside">-->
-<!--                <script type="text/javascript" src="/shopify_app/static/src/js/index.js"/>-->
+<!--                <script type="text/javascript" src="/shopify_app/static/src/js/shop_script.js"/>-->
 <!--            </xpath>-->
 <!--        </template>-->
 

@@ -32,7 +32,7 @@ class ShopifyDiscountProgram(models.Model):
                 rec.product_ids = rec.env['product.template'].search([0, '=', 1])
 
     def create_product(self):
-        product_list = self.env['product.template'].search(['shop_id', '=', self.shop_id], limit=3)
+        product_list = self.env['product.template'].search([('shop_id', '=', self.shop_id.id)], limit=50)
         pro_list = self.env['s.discount.program.product'].search([])
         product_id_list = []
         for product in pro_list:
@@ -48,7 +48,7 @@ class ShopifyDiscountProgram(models.Model):
     def creat_customer(self):
         # customer_list = self.env['res.partner'].search([('shop_id', '=', self.shop_id.id),
         #                                                 ('company_type', '=', 'person')], limit=3)
-        customer_list = self.env['res.partner'].search([('shop_id', '=', self.shop_id.id)], limit=3)
+        customer_list = self.env['res.partner'].search([('shop_id', '=', self.shop_id.id)], limit=50)
         cus_list = self.env['s.discount.program.customer'].search([])
         customer_id_list = []
         for customer in cus_list:

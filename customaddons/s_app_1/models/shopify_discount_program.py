@@ -30,7 +30,6 @@ class ShopifyDiscountProgram(models.Model):
 
     def open_product(self):
         pro_list = self.env['product.product'].search([('shop_id', '=', self.shop_id.id)], limit=50)
-
         product_list = self.env['shopify.discount.program.product'].search([])
         pro_id_list = []
         for pro in product_list:
