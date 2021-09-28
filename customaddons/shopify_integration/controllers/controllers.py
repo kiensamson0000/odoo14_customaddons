@@ -143,11 +143,11 @@ class ShopifyApp(http.Controller):
                     "event": "onload",
                     "src": script_src
                 })
-            else:
-                shopify.ScriptTag.write({
-                    "event": "onload",
-                    "src": script_src
-                })
+            # else:
+            #     shopify.ScriptTag.write({
+            #         "event": "onload",
+            #         "src": script_src
+            #     })
                 # scriptTag = shopify.ScriptTag.create({
                 #     "event": "onload",
                 #     "src": script_src

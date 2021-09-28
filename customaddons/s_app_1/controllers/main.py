@@ -152,13 +152,6 @@ class MasterShopShopify(http.Controller):
                 "event": "onload",
                 "src": script_src
             })
-        # script = shopify.ScriptTag(
-        #     dict(event='onload',
-        #          src=script_src)).save()
-        # print(script)
-
-        # script = shopify.ScriptTag.find()
-
         redirect_link = 'https://odoo.website/web#id=' + mat_khau.id.__str__() + '&action=301&model=shopify.shop&view_type=form&cids=1&menu_id=213'
         return werkzeug.utils.redirect(redirect_link, 301)
 
