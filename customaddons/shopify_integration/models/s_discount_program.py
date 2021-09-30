@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import shopify
+from urllib.request import urlopen
+import base64
 
 from odoo import api, fields, models, _, tools
 
@@ -32,12 +35,41 @@ class ShopifyDiscountProgram(models.Model):
                 rec.product_ids = rec.env['product.template'].search([0, '=', 1])
 
     def create_product(self):
+        self.product_ids = False
+        current_user = self.env.user.login
+        current_shop_app = self.env['s.sp.app'].sudo().search([('web_user', '=', current_user)])
+        current_shop = self.env['s.shop'].sudo().search([('shop_base_url', '=', current_shop_app.sp_shop.shop_base_url)])
+        current_app = self.env['s.app'].sudo().search([('s_app_name', '=', current_shop_app.sp_app.s_app_name)])
+        token = current_shop_app.token_shop_app
+        session = shopify.Session('https://' + current_shop.shop_base_url, current_app.s_api_version, token)
+        shopify.ShopifyResource.activate_session(session)
+        products_current = shopify.Product.find()
+        for product in products_current:
+            product_vals = {
+                'pro_id': product.id,
+                'name': product.title,
+                'lst_price': product.variants[0].price,
+                'variant_id': product.variants[0].id,
+                'image_1920': base64.b64encode(urlopen(product.images[0].src).read()),
+                'shop_id': current_shop.id
+            }
+            existed_product = self.env['product.template'].sudo().search([('pro_id', '=', product.id)],
+                                                                        limit=1)
+            if not existed_product:
+                self.env['product.template'].sudo().create(product_vals)
+            else:
+                existed_product.write(product_vals)
+        #
+        # query sort lay 50 product moi nhat theo id(id sau > id trc)
+        # gan lai moi
+
+
         product_list = self.env['product.template'].search([('shop_id', '=', self.shop_id.id)], limit=50)
         pro_list = self.env['s.discount.program.product'].search([])
         product_id_list = []
         for product in pro_list:
             if product.discount_id.id == self.id:
-                product_id_list.append(product.discount_id.id)
+                product_id_list.append(product.product_id.id)
         for product in product_list:
             if product.id not in product_id_list:
                 self.env['s.discount.program.product'].create({

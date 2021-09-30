@@ -6,6 +6,7 @@ from odoo import models, fields, api
 class SShop(models.Model):
     _name = 's.shop'
     _description = 'save list shops'
+    _rec_name = 'shop_base_url'
 
     shop_base_url = fields.Char('Base Url')
     shop_owner = fields.Char('Shop owner')

@@ -46,6 +46,7 @@ class ShopifyApp(http.Controller):
             shops_list = request.env['s.shop'].search([])
             new_shop = True
             password = random.randint(1000000000, 9999999999)
+            print(password)
             shop_current = shopify.Shop.current()
             for shop in shops_list:
                 if shop_current.myshopify_domain == shop.shop_base_url:
@@ -57,18 +58,18 @@ class ShopifyApp(http.Controller):
                     'shop_owner': shop_current.shop_owner,
                     'shop_currency': password,
                 })
-            #
-            # todo: create s_sp_app
-            # existed_s_sp_app = request.env['s.sp.app'].search([()])
-            request.env['s.sp.app'].sudo().create({
-                'sp_app': request.env['s.app'].search([('s_api_key', '=', exiting_app.s_api_key)]).id,
-                'sp_shop': request.env['s.shop'].search([('shop_base_url', '=', shop_current.domain)]).id,
-            })
-            #
-            # todo: create shop in 'res.partner'
-            existed_res_partner = request.env['res.partner'].search([('email', '=', shop_current.customer_email)])
-            if not existed_res_partner:
-                partner_id = request.env['res.partner'].sudo().create({
+
+                # todo: create s_sp_app
+                request.env['s.sp.app'].sudo().create({
+                    'sp_app': request.env['s.app'].search([('s_api_key', '=', exiting_app.s_api_key)]).id,
+                    'sp_shop': request.env['s.shop'].search([('shop_base_url', '=', shop_current.domain)]).id,
+                    'token_shop_app': access_token,
+                    'web_user': shop_current.domain,
+                })
+
+                # todo: create shop in 'res.partner'
+                existed_res_partner = request.env['res.partner'].search([('email', '=', shop_current.customer_email)])
+                partner_vals = {
                     'company_type': 'company',
                     'name': shop_current.name,
                     'street': shop_current.address1,
@@ -77,21 +78,29 @@ class ShopifyApp(http.Controller):
                     'zip': shop_current.zip,
                     'email': shop_current.customer_email,
                     'website': shop_current.domain,
-                    'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id
-                })
-            #
-            # todo: create user in 'res.partner'
-            existed_user = request.env['res.users'].search([('login', '=', shop_current.domain)])
-            if not existed_user:
-                request.env['res.users'].sudo().create({
+                    'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id,
+                }
+                if not existed_res_partner:
+                    request.env['res.partner'].sudo().create(partner_vals)
+                else:
+                    request.env['res.partner'].sudo().write(partner_vals)
+
+                # todo: create user in 'res.partner'
+                existed_user = request.env['res.users'].search([('login', '=', shop_current.domain)])
+                user_vals = {
                     'login': shop_current.domain,
                     'password': password,
                     'active': 'true',
-                    'partner_id': partner_id.id,
-                })
+                    'partner_id': request.env['res.partner'].sudo().search([('email', '=', shop_current.customer_email)]).id
+                }
+                print('shdsadgjsd')
+                print(user_vals)
+                if not existed_user:
+                    request.env['res.users'].sudo().create(user_vals)
+                else:
+                    request.env['res.users'].sudo().write(user_vals)
 
             # todo: create customer in 'res.partner'
-            # website = ('http://' + shop_current.domain) or ('https://' + shop_current.domain)
             website = 'https://' + shop_current.domain
             customer_current = shopify.Customer.search()
             customer_list = request.env['res.partner'].search([])
@@ -101,7 +110,7 @@ class ShopifyApp(http.Controller):
             for customer in customer_current:
                 if customer.id.__str__() not in customer_id_list:
                     customer_name = customer.first_name + '' + customer.last_name
-                    request.env['res.partner'].create({
+                    cus_vals = {
                         'customer_id': customer.id,
                         'company_type': 'person',
                         'name': customer_name,
@@ -109,29 +118,26 @@ class ShopifyApp(http.Controller):
                         'phone': customer.phone,
                         'email': customer.email,
                         'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id
-                    })
-            #
+                    }
+                    request.env['res.partner'].create(cus_vals)
+
             # todo: create product in 'product.template'
-            product_current = shopify.Product.find()
-            # product_list = request.env['product.template'].search([])
-            # product_id_list = []
-            # for product in product_list:
-            #     product_id_list.append(product.pro_id)
-            for product in product_current:
-                product_vals = {
-                    'pro_id': product.id,
-                    'name': product.title,
-                    'lst_price': product.variants[0].price,
-                    'variant_id': product.variants[0].id,
-                    'image_1920': base64.b64encode(urlopen(product.images[0].src).read()),
-                    'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id
-                }
-                existed_product = request.env["product.template"].sudo().search([('pro_id', '=', product.id)],
-                                                                      limit=1)
-                if not existed_product:
-                    request.env['product.template'].sudo().create(product_vals)
-                else:
-                    existed_product.write(product_vals)
+            # product_current = shopify.Product.find()
+            # for product in product_current:
+            #     product_vals = {
+            #         'pro_id': product.id,
+            #         'name': product.title,
+            #         'lst_price': product.variants[0].price,
+            #         'variant_id': product.variants[0].id,
+            #         'image_1920': base64.b64encode(urlopen(product.images[0].src).read()),
+            #         'shop_id': request.env['s.shop'].search([("shop_base_url", "=", shop_current.domain)]).id
+            #     }
+            #     existed_product = request.env["product.template"].sudo().search([('pro_id', '=', product.id)],
+            #                                                           limit=1)
+            #     if not existed_product:
+            #         request.env['product.template'].sudo().create(product_vals)
+            #     else:
+            #         existed_product.write(product_vals)
             password_login = request.env['s.shop'].search([('shop_base_url', '=', shop_current.domain)])
             print(password_login.shop_password)
             #
@@ -143,17 +149,14 @@ class ShopifyApp(http.Controller):
                     "event": "onload",
                     "src": script_src
                 })
-            # else:
-            #     shopify.ScriptTag.write({
-            #         "event": "onload",
-            #         "src": script_src
-            #     })
-                # scriptTag = shopify.ScriptTag.create({
-                #     "event": "onload",
-                #     "src": script_src
-                # })
-            redirect_link = 'https://odoo.website/web#id=' + password_login.id.__str__() + '&action=301&model=shopify.shop&view_type=form&cids=1&menu_id=213'
-            return werkzeug.utils.redirect(redirect_link, 301)
+            ####
+            curent_user = request.env['s.shop'].search([('shop_base_url', '=', shop_current.domain)])
+            db = http.request.env.cr.dbname
+            request.env.cr.commit()
+            request.session.authenticate(db, curent_user.shop_base_url, curent_user.shop_currency)
+            redirect_link = 'https://odoo.website/web#cids=1&home='
+            # redirect_link = 'https://odoo.website/web#id=' + password_login.id.__str__() + '&action=301&model=shopify.shop&view_type=form&cids=1&menu_id=213'
+            return werkzeug.utils.redirect(redirect_link)
 
     @http.route('/shopify_data/fetch_product/<string:product_id>/<string:vendor>/<string:shop>', auth='public',
                 type='json', cors='*', csrf=False)
@@ -211,7 +214,6 @@ class ShopifyApp(http.Controller):
                     dict_discount[pro] = {'Discount Name': dis, 'Discount Amount': price_max}
                     discount += price_max
                     break
-
         return {
             'discount': dict_discount,
             'total': discount
